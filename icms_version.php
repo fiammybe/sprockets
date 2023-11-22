@@ -17,10 +17,10 @@ if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
 /**  General Information  */
 $modversion = array(
   'name'=> _MI_SPROCKETS_MD_NAME,
-  'version'=> '2.01',
+  'version'=> '2.1',
   'description'=> _MI_SPROCKETS_MD_DESC,
-  'author'=> "Madfish (Simon Wilkinson)",
-  'credits'=> "Skeleton code generated with ImBuilding. Module icon by David Lanham http://dlanham.com/",
+  'author'=> "David Janssens",
+  'credits'=> "Previous versions by Madfish (Simon Wilkinson).Skeleton code generated with ImBuilding. Module icon by David Lanham http://dlanham.com/",
   'help'=> "",
   'license'=> "GNU General Public License (GPL)",
   'official'=> 0,
@@ -32,22 +32,23 @@ $modversion = array(
   'image'=> "images/icon_big.png", /* for backward compatibility */
 
 /**  Development information */
-  'status_version'=> "2.01",
-  'status'=> "Beta",
-  'date'=> "8/1/2015",
+  'status_version'=> "2.1 RC",
+  'status'=> "RC",
+  'date'=> "22 November 2023",
   'author_word'=> "This version of Sprockets is compatible with ImpressCMS V1.3.x.",
 
 /** Contributors */
-  'developer_website_url' => "https://www.isengard.biz",
-  'developer_website_name' => "Isengard.biz",
-  'developer_email' => "simon@isengard.biz");
+  'developer_website_url' => "https://github.com/fiammybe/sprockets/",
+  'developer_website_name' => "Github",
+  'developer_email' => "david.j@impresscms.org");
 
+$modversion['people']['developers'][] = "fiammybe (David Janssens)";
 $modversion['people']['developers'][] = "Madfish (Simon Wilkinson)";
 
 /** Manual */
-$modversion['manual']['wiki'][] = "<a href='http://wiki.impresscms.org/index.php?title=Sprockets' target='_blank'>English</a>";
+$modversion['manual']['wiki'][] = "<a href='https://github.com/fiammybe/sprockets/wiki' target='_blank'>English</a>";
 
-$modversion['warning'] = _CO_ICMS_WARNING_BETA;
+$modversion['warning'] = _CO_ICMS_WARNING_RC;
 
 /** Administrative information */
 $modversion['hasAdmin'] = 1;
