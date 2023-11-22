@@ -77,7 +77,7 @@ class SprocketsTagHandler extends icms_ipf_Handler {
 	 * Returns a select box containing the category tree
 	 *
 	 * @param int $selected
-	 * @return string $parentCategoryOptions
+	 * @return array $parentCategoryOptions
 	 */
 
 	public function getCategoryOptions($selected = '') {
@@ -366,14 +366,14 @@ class SprocketsTagHandler extends icms_ipf_Handler {
 		} else {
 			$rows = $sprockets_taglink_handler->convertResultSet($result);
 			foreach ($rows as $key => $row) {
-				$tag_ids[] = $row->getVar('tid');
+				$tag_ids = $row->getVar('tid');
 			}
 			// remove empty tags
 			if (empty($tag_ids)) {
 				$tagList = '';
 			} else {
 				// Flip the array so we can use the IDs to check for matching keys in the master $tagList
-				$tagList =  array(0 => $zero_option_message) + array_intersect_key($tagList, array_flip($tag_ids));
+				$tagList =  array_merge(array(0 => $zero_option_message) , array_intersect_key($tagList, array_flip($tag_ids)));
 				
 				// Add an extra option for selecting untagged content
 				if ($untagged_content_option) {
