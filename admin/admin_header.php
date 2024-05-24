@@ -15,7 +15,7 @@
 
 include_once '../../../include/cp_header.php';
 
-include_once ICMS_ROOT_PATH.'/modules/' . basename(dirname(dirname(__FILE__)))
+include_once ICMS_ROOT_PATH.'/modules/' . basename(dirname(__DIR__))
 	.'/include/common.php';
 if( !defined("SPROCKETS_ADMIN_URL") ) define('SPROCKETS_ADMIN_URL', SPROCKETS_URL . "admin/");
 include_once(SPROCKETS_ROOT_PATH . 'include/requirements.php');

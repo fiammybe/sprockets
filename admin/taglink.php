@@ -21,7 +21,7 @@ function edittaglink($taglink_id = 0)
 {
 	global $sprockets_taglink_handler, $icmsAdminTpl;
 
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 
 	$taglinkObj = $sprockets_taglink_handler->get($taglink_id);
 

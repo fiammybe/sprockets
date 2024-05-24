@@ -22,7 +22,7 @@ if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
  */
 
 function sprockets_getModuleAdminLink($moduleName='sprockets') {
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 	if (!$moduleName && (isset ($sprocketsModule) && is_object($sprocketsModule))) {
 		$moduleName = $sprocketsModule->getVar('dirname');
 	}
@@ -41,7 +41,7 @@ function sprockets_getModuleName($withLink = TRUE, $forBreadCrumb = FALSE, $modu
 
 	if (!$moduleName) {
 
-		$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+		$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 		$moduleName = $sprocketsModule->getVar('dirname');
 	}
 	

@@ -286,7 +286,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		// Need to discard either the categories or tags from the results, depending on the 
 		// label_type that was requested:
 		// Read a reference buffer of all tags with key as ID
-		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
+		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
 				'sprockets');
 		$criteria = icms_buildCriteria(array('label_type' => $label_type));
 		$tagList = $sprockets_tag_handler->getList($criteria, TRUE);
@@ -665,9 +665,9 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		$tagList = $taglinkObjArray = $taglinks_for_deletion = array();
 		
 		// Taglinks know the tag id, module id, item id and item type.
-		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))), 
+		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)), 
 				'sprockets');
-		$sprockets_taglink_handler = icms_getModuleHandler('taglink', basename(dirname(dirname(__FILE__))),
+		$sprockets_taglink_handler = icms_getModuleHandler('taglink', basename(dirname(__DIR__)),
 				'sprockets');
 		
 		// Read a buffer of ALL tags OR categories on the system (one or the other)

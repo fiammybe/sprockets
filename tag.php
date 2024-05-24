@@ -42,7 +42,7 @@ if (icms_getConfig("enable_user_side_pages", "sprockets")) {
 	$combinedContentObjects = array();
 
 	// Get relative path to document root for this ICMS install
-	$directory_name = basename(dirname(__FILE__));
+	$directory_name = basename(__DIR__);
 	$script_name = getenv("SCRIPT_NAME");
 	$document_root = str_replace('/modules/' . $directory_name . '/tag.php', '', $script_name);
 

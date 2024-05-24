@@ -204,7 +204,7 @@ function sprockets_content_teasers_show($options) {
  */
 
 function sprockets_content_teasers_edit($options) {
-	include_once(ICMS_ROOT_PATH . '/modules/' . basename(dirname(dirname(__FILE__)))
+	include_once(ICMS_ROOT_PATH . '/modules/' . basename(dirname(__DIR__))
 		. '/include/common.php');
 
 	$form = $form_select = $criteria = '';

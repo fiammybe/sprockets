@@ -37,7 +37,7 @@ $adminmenu[$i]['link'] = 'admin/css_editor.php';
 
 global $icmsConfig, $sprocketsConfig;
 
-$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 
 if (isset($sprocketsModule)) {
 

@@ -22,7 +22,7 @@
 function editarchive($archive_id = 0) {
 	global $sprockets_archive_handler, $icmsAdminTpl;
 
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 
 	$archiveObj = $sprockets_archive_handler->get($archive_id);
 	
@@ -58,7 +58,7 @@ function editarchive($archive_id = 0) {
 include_once("admin_header.php");
 
 $sprockets_archive_handler = icms_getModuleHandler('archive', 
-	basename(dirname(dirname(__FILE__))), 'sprockets');
+	basename(dirname(__DIR__)), 'sprockets');
 
 $clean_op = '';
 
@@ -95,7 +95,7 @@ if (in_array($clean_op,$valid_op,TRUE)) {
 		case "toggleStatus":
 		
 			$status = $sprockets_archive_handler->toggleStatus($clean_archive_id, 'enable_archive');
-			$ret = '/modules/' . basename(dirname(dirname(__FILE__))) . '/admin/archive.php';
+			$ret = '/modules/' . basename(dirname(__DIR__)) . '/admin/archive.php';
 			if ($status == 0) {
 				redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_ARCHIVE_DISABLED);
 			} else {
