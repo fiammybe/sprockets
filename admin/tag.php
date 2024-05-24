@@ -21,7 +21,7 @@ function edittag($tag_id = 0)
 {
 	global $sprockets_tag_handler, $icmsAdminTpl;
 
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 	$tagObj = $sprockets_tag_handler->get($tag_id);
 		
 	// Set label type as tag, hide category fields
@@ -49,7 +49,7 @@ function edittag($tag_id = 0)
 
 include_once("admin_header.php");
 
-$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
+$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
 	'sprockets');
 
 $clean_op = '';
@@ -84,7 +84,7 @@ if (in_array($clean_op, $valid_op, TRUE)){
 	case "toggleStatus":
 		
 			$status = $sprockets_tag_handler->toggleStatus($clean_tag_id, 'rss');
-			$ret = '/modules/' . basename(dirname(dirname(__FILE__))) . '/admin/tag.php';
+			$ret = '/modules/' . basename(dirname(__DIR__)) . '/admin/tag.php';
 			if ($status == 0) {
 				redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_TAG_RSS_DISABLED);
 			} else {
@@ -96,7 +96,7 @@ if (in_array($clean_op, $valid_op, TRUE)){
 	case "toggleNavigationElement":
 		$status = $ret = '';
 		$status = $sprockets_tag_handler->toggleStatus($clean_tag_id, 'navigation_element');
-		$ret = '/modules/' . basename(dirname(dirname(__FILE__))) . '/admin/tag.php';
+		$ret = '/modules/' . basename(dirname(__DIR__)) . '/admin/tag.php';
 		if ($status == 0) {
 			redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_TAG_NAVIGATION_DISABLED);
 		} else {

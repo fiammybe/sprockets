@@ -24,7 +24,7 @@ $modversion = array(
   'help'=> "",
   'license'=> "GNU General Public License (GPL)",
   'official'=> 0,
-  'dirname'=> basename(dirname(__FILE__ )),
+  'dirname'=> basename(__DIR__),
 
 /**  Images information  */
   'iconsmall'=> "images/icon_small.png",

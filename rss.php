@@ -32,10 +32,10 @@ $tags_with_rss = $content_item_array = array();
 
 $clean_tag_id = isset($_GET['tag_id']) ? (int)$_GET['tag_id'] : FALSE;
 
-include_once ICMS_ROOT_PATH . '/modules/' . basename(dirname(__FILE__)) . '/class/icmsfeed.php';
+include_once ICMS_ROOT_PATH . '/modules/' . basename(__DIR__) . '/class/icmsfeed.php';
 
 $unified_feed = new IcmsFeed();
-$sprocketsModule = icms_getModuleInfo(basename(dirname(__FILE__)));
+$sprocketsModule = icms_getModuleInfo(basename(__DIR__));
 
 // get handlers
 $sprockets_taglink_handler = icms_getModuleHandler('taglink', $sprocketsModule->getVar('dirname'),

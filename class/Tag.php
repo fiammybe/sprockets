@@ -46,8 +46,8 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		$this->setControl('navigation_element', 'yesno');
 		$this->setControl('rss', 'yesno');
 		$this->setControl('icon', array('name' => 'image'));
-		$url = ICMS_URL . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
-		$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
+		$url = ICMS_URL . '/uploads/' . basename(dirname(__DIR__)) . '/';
+		$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(__DIR__)) . '/';
 		$this->setImageDir($url, $path);
 		
 		$this->IcmsPersistableSeoObject();
@@ -218,7 +218,7 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		
 		if ($parent_id) {
 			
-			$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
+			$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
 					'sprockets');
 
 			$parentObj = $sprockets_tag_handler->get($parent_id);
@@ -231,7 +231,7 @@ class SprocketsTag extends icms_ipf_seo_Object {
 	private function _navigation_element() {
 		$navigation_element = $button = '';
 		$navigation_element = $this->getVar('navigation_element', 'e');
-		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
+		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__DIR__))
 				. '/admin/tag.php?tag_id=' . $this->id() . '&amp;op=toggleNavigationElement">';
 		if ($navigation_element == FALSE) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="'
@@ -259,7 +259,7 @@ class SprocketsTag extends icms_ipf_seo_Object {
 	
 	private function _rss() {
 		$status = $this->getVar('rss', 'e');
-		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
+		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__DIR__))
 				. '/admin/tag.php?tag_id=' . $this->id() . '&amp;op=toggleStatus">';
 		if ($status == FALSE) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' 
@@ -305,10 +305,10 @@ class SprocketsTag extends icms_ipf_seo_Object {
 	private function _getRssFeedLink() {
 			
 		$rss_snippet = '<a href="' . ICMS_URL .
-			'/modules/' . basename(dirname(dirname(__FILE__)))
+			'/modules/' . basename(dirname(__DIR__))
 			. '/rss.php?tag_id=' . $this->id() . '" title="' . _CO_SPROCKETS_SUBSCRIBE_RSS_ON 
 			. $this->getVar('title', 'e') . '"><img src="' . ICMS_URL . '/modules/' 
-			. basename(dirname(dirname(__FILE__))) . '/images/rss.png" alt="' . _CO_SPROCKETS_RSS
+			. basename(dirname(__DIR__)) . '/images/rss.png" alt="' . _CO_SPROCKETS_RSS
 			. '" /></a>';
 		
 		return $rss_snippet;		

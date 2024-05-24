@@ -346,7 +346,7 @@ class SprocketsTagHandler extends icms_ipf_Handler {
 		// containing offline content will still be displayed. This can change later if
 		// there is agreement on standardising existing module fields with Sprockets
 		$sprockets_taglink_handler = icms_getModuleHandler('taglink', 
-				basename(dirname(dirname(__FILE__))), 'sprockets');
+				basename(dirname(__DIR__)), 'sprockets');
 
 		$query = $rows = $tag_ids = '';
 		$query = "SELECT DISTINCT `tid` FROM "
@@ -619,9 +619,9 @@ class SprocketsTagHandler extends icms_ipf_Handler {
 		$categoryObjArray = $allChildCategories = array();
 		$criteria = new icms_db_criteria_Compo();
 		$sprockets_tag_handler = icms_getModuleHandler('tag',
-			basename(dirname(dirname(__FILE__))), 'sprockets');
+			basename(dirname(__DIR__)), 'sprockets');
 		$sprockets_taglink_handler = icms_getModuleHandler('taglink',
-			basename(dirname(dirname(__FILE__))), 'sprockets');
+			basename(dirname(__DIR__)), 'sprockets');
 
 		/*
 		 * Deleting a parent category also kills the category subtree underneath it. Content is not

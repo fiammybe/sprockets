@@ -88,7 +88,7 @@ class SprocketsTaglink extends icms_ipf_Object {
 	/////////////////////////////////////////////////////////
 	
 	private function _getTag() {
-		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
+		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
 			'sprockets');
 		$tagObj = $sprockets_tag_handler->get($this->id());
 		

@@ -474,7 +474,7 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 	private function _enable_archive() {
 		$status = $this->getVar('enable_archive', 'e');
 
-		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
+		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__DIR__))
 				. '/admin/archive.php?archive_id=' . $this->id() . '&amp;op=toggleStatus">';
 		if ($status == 0) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' 
@@ -749,7 +749,7 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 				}
 				
 				// subject (tags)
-				$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
+				$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
 				if ($sprocketsModule) {
 					$content['subject'] = array();
 					$sprockets_tag_handler = icms_getModuleHandler('tag',
@@ -886,7 +886,7 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 	private function _lookupRecords($content_handler, $requestVerb, &$response, $metadataPrefix,
 			$from, $until, $set, $resumptionToken, $cursor) {
 			
-		$sprocketsConfig = icms_getModuleConfig(basename(dirname(dirname(__FILE__))));
+		$sprocketsConfig = icms_getModuleConfig(basename(dirname(__DIR__)));
 
 		$valid = TRUE; // if any part of the request is invalid, this will be set to FALSE => exit
 		$response .= '<request verb="' . $requestVerb . '" metadataPrefix="' . $metadataPrefix . '"';

@@ -41,7 +41,7 @@ function icms_module_update_sprockets($module) {
  */
 
 function authorise_mimetypes() {
-	$dirname = basename(dirname(dirname(__FILE__)));
+	$dirname = basename(dirname(__DIR__));
 	$extension_list = array('png', 'gif', 'jpg');
 	$system_mimetype_handler = icms_getModuleHandler('mimetype', 'system');
 	foreach ($extension_list as $extension) {
@@ -79,7 +79,7 @@ function authorise_mimetypes() {
 function icms_module_install_sprockets($module) {
 
 	// create an uploads directory for images
-	$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
+	$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(__DIR__)) . '/';
 	$directory_exists = $writeable = TRUE;
 
 	// check if upload directory exists, make one if not
