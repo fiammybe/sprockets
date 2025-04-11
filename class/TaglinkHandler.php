@@ -12,7 +12,7 @@
 */
 
 class SprocketsTaglinkHandler extends icms_ipf_Handler {
-	
+
 	////////////////////////////////////////////////////////
 	//////////////////// PUBLIC METHODS ////////////////////
 	////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 	public function __construct(& $db) {
 		parent::__construct($db, 'taglink', 'taglink_id', 'tid', 'iid', 'sprockets');
 	}
-	
+
 	/**
 	 * Retrieve tag_ids for a SINGLE object (either tag or category label_type, but not both)
 	 *
@@ -42,14 +42,14 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 			$clean_label_type = 1;
 		} else {
 			$clean_label_type = 0;
-		}		
-		
+		}
+
 		return $this->_getTagsForObject($clean_iid, $clean_moduleName, $clean_itemname, $clean_label_type);
 	}
-	
+
 	/**
 	 * Retrieve tag IDs for MULTIPLE objects sorted into a multidimensional array
-	 *  
+	 *
 	 * @param array $iids
 	 * @param string $item
 	 * @param id $module
@@ -64,30 +64,30 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		$clean_module_id = !empty($module_id) ? (int)$module_id : 0;
 		return $this->_getTagsForObjects($clean_iids, $clean_item, $clean_module_id);
 	}
-	
+
 	/**
 	 * Returns a list of module/object pairs that are clients of sprockets
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getClientObjects() {
 		return $this->_getClientObjects();
 	}
-	
+
 	/**
 	 * Returns a list of content items (as arrays) associated with a specific tag, module or item type
 	 *
 	 * Can draw content from across compatible modules simultaneously. Used to build unified RSS
 	 * feeds and tag pages. Always use this method with a limit and as many parameters as possible
-	 * in order to simplify the results and avoid slow queries (for example, if you neglect to 
+	 * in order to simplify the results and avoid slow queries (for example, if you neglect to
 	 * specify a module_id it will run queries on all compatible modules).
-	 * 
+	 *
 	 * Note: The first element in the returned array is a COUNT of the total number of available
 	 * results, which is used to construct pagination controls. The calling code needs to remove
 	 * this element before attempting to process the content objects
-	 * 
-	 * Note: This method should ONLY be used to retrieve content from multiple modules 
-	 * simultaneously. Individual modules can retrieve / process their own results much more 
+	 *
+	 * Note: This method should ONLY be used to retrieve content from multiple modules
+	 * simultaneously. Individual modules can retrieve / process their own results much more
 	 * efficiently using their own methods or a standard IPF call.
 	 *
 	 * @param mixed $tag_id // Can be an int (tag ID) or 'untagged' to retrieve untagged content
@@ -96,15 +96,15 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 	 * @param int $start
 	 * @param int $limit
 	 * @param string $sort
-	 * 
+	 *
 	 * @return array $content_object_array
 	 */
-	
+
 	public function getTaggedItems($tag_id = FALSE, $module_id = FALSE, $item_type = FALSE,
 			$start = 0, $limit = FALSE, $sort = 'DESC') {
-		
+
 		$clean_item_type = array();
-		
+
 		$clean_tag_id = !empty($tag_id) ? (int)$tag_id : 0;
 		$clean_module_id = !empty($module_id) ? (int)$module_id : 0;
 		if ($item_type) {
@@ -127,26 +127,26 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		} else {
 			$clean_sort = 'ASC';
 		}
-		
+
 		return $this->_getTaggedItems($clean_tag_id, $clean_module_id, $clean_item_type,
 				$clean_start, $clean_limit, $clean_sort);
 	}
-	
+
 	/**
 	 * Returns a list of content items (as arrays) that has been marked as untagged, and that are
 	 * optionally associated with a specific tag, module or item type
 	 *
 	 * Can draw content from across compatible modules simultaneously. Used to build unified RSS
 	 * feeds and content pages. Always use this method with a limit and as many parameters as possible
-	 * in order to simplify the results and avoid slow queries (for example, if you neglect to 
+	 * in order to simplify the results and avoid slow queries (for example, if you neglect to
 	 * specify a module_id it will run queries on all compatible modules).
-	 * 
+	 *
 	 * Note: The first element in the returned array is a COUNT of the total number of available
 	 * results, which is used to construct pagination controls. The calling code needs to remove
 	 * this element before attempting to process the content objects
-	 * 
-	 * Note: This method should ONLY be used to retrieve content from multiple modules 
-	 * simultaneously. Individual modules can retrieve / process their own results much more 
+	 *
+	 * Note: This method should ONLY be used to retrieve content from multiple modules
+	 * simultaneously. Individual modules can retrieve / process their own results much more
 	 * efficiently using their own methods or a standard IPF call.
 	 *
 	 * @param int $tag_id
@@ -155,14 +155,14 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 	 * @param int $start
 	 * @param int $limit
 	 * @param string $sort
-	 * 
+	 *
 	 * @return array $content_object_array
 	 */
 	public function getUntaggedContent($module_id = FALSE, $item_type = FALSE, $start = FALSE,
 			$limit = FALSE, $sort = 'DESC') {
-		
+
 		$clean_item_type = array();
-		
+
 		$clean_module_id = !empty($module_id) ? (int)$module_id : 0;
 		if ($item_type) {
 			$item_type_whitelist = array_keys($this->getClientObjects());
@@ -197,21 +197,21 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		} else {
 			$item_type = icms_getConfig('client_objects', 'sprockets');
 		}
-				
-		return $this->_getUntaggedContent($clean_module_id, $clean_item_type, $clean_start, 
+
+		return $this->_getUntaggedContent($clean_module_id, $clean_item_type, $clean_start,
 				$clean_limit, $clean_sort);
 	}
-	
+
 	/**
 	 * Saves tags for an object by creating taglinks.
-	 * 
-	 * If you are saving categories, you need to pass in the category key. Also note: If your object 
-	 * has both tags and categories, then you need to call this method TWICE with different 
-	 * label_type (0 = tag, 1 = category) in order to update them both. The 'untagged' option only 
+	 *
+	 * If you are saving categories, you need to pass in the category key. Also note: If your object
+	 * has both tags and categories, then you need to call this method TWICE with different
+	 * label_type (0 = tag, 1 = category) in order to update them both. The 'untagged' option only
 	 * applies to tags (not available for categories).
 	 *
 	 * Based on code from ImTagging: author marcan aka Marc-Andre Lanciault <marcan@smartfactory.ca>
-	 * 
+	 *
 	 * @param object $obj
 	 * @param string $tag_var
 	 */
@@ -226,17 +226,17 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		}
 		$this->_storeTagsForObject($clean_obj, $clean_tag_var, $clean_label_type);
 	}
-	
+
 	/**
 	 * Deletes either the category- or tag-related taglinks of an object prior to updating it.
-	 * 
+	 *
 	 * When updating an objects tags or categories, it is necessary to delete the old ones before
-	 * saving the new, modified set. This creates a problem: Since tags/categories are managed 
-	 * separately (because some objects may have both), you can't just delete them all because they 
+	 * saving the new, modified set. This creates a problem: Since tags/categories are managed
+	 * separately (because some objects may have both), you can't just delete them all because they
 	 * reside in the same database table. You need to delete EITHER the tags OR the categories.
 	 * Otherwise updating your tags will kill all your categories, and vice-versa. So call this
 	 * method with the appropriate label_type and it will selectively delete them.
-	 * 
+	 *
 	 * @param obj $obj
 	 * @param int $label_type (0 = tags, 1 = categories)
 	 */
@@ -249,10 +249,10 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		}
 		$this->_deleteTagsForObject($clean_obj, $clean_label_type);
 	}
-	
+
 	/**
 	 * Cleans up taglinks after an object is deleted
-	 * 
+	 *
 	 * Based on code from ImTagging: author marcan aka Marc-AndrÃ© Lanciault <marcan@smartfactory.ca>
 	 *
 	 * @param object $obj
@@ -262,16 +262,17 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		$clean_obj = is_object($obj) ? $obj : FALSE;
 		$this->_deleteAllForObject($clean_obj);
 	}
-	
+
 	/////////////////////////////////////////////////////////
 	//////////////////// PRIVATE METHODS ////////////////////
 	/////////////////////////////////////////////////////////
-	
+
     private function _getTagsForObject($iid, $moduleName, $itemname, $label_type) {
-		
-		$tagList = $resultList = $ret = array();
+
+        icms_loadLanguageFile("sprockets", "common");
+        $tagList = $resultList = $ret = array();
 		$moduleObj = icms_getModuleInfo($moduleName);
-		$sprockets_tag_handler = icms_getModuleHandler('tag', 'sprockets', 'sprockets');		
+		$sprockets_tag_handler = icms_getModuleHandler('tag', 'sprockets', 'sprockets');
     	$criteria = new icms_db_criteria_Compo();
     	$criteria->add(new icms_db_criteria_Item('mid', $moduleObj->getVar('mid')));
     	$criteria->add(new icms_db_criteria_Item('item', $itemname));
@@ -282,8 +283,8 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
     	foreach($rows as $row) {
     		$ret[] = $row['tid'];
     	}
-		
-		// Need to discard either the categories or tags from the results, depending on the 
+
+		// Need to discard either the categories or tags from the results, depending on the
 		// label_type that was requested:
 		// Read a reference buffer of all tags with key as ID
 		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
@@ -293,7 +294,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		if (!$label_type) {
 			$tagList[0] = _CO_SPROCKETS_TAG_UNTAGGED;
 		}
-		
+
 		// For each of the object's tags, check if the array_key_exists in the reference $tagList.
 		// If so, then it is the right kind of tag and can be appended to the results. However, if
 		// there are NO tags, or if there is only one tag and tid = 0 then it's untagged content
@@ -309,13 +310,13 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 
     	return $resultList;
     }
-	
+
 	private function _getTagsForObjects($iids, $item, $module_id) {
-		
+
 		$sql = $rows = '';
 		$tag_ids = array();
 		$iids = implode(',', $iids);
-		
+
 		$sql = "SELECT `iid`, `tid` FROM " . icms::$xoopsDB->escape($this->table) . " WHERE "
 				. "`item` = '" . $item . "' AND "
 				. "`iid` IN (" . $iids . ")";
@@ -337,7 +338,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		}
 		return $tag_ids;
 	}
-	
+
 	private function _getClientObjects() {
 		return array(
 			'article' => 'news',
@@ -351,31 +352,31 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 			'event' => 'events'
 			);
 	}
-	
+
 	private function _getTaggedItems($tag_id, $module_id, $item_type, $start, $limit, $sort) {
-		
+
 		$sql = $item_list = $items = '';
 		$content_count = 0;
 		$untagged_content = $nothing_to_display = 0;
-		$content_id_array = $content_object_array = $content_array = $taglink_object_array 
+		$content_id_array = $content_object_array = $content_array = $taglink_object_array
 			= $module_ids = $item_types = $module_array = $parent_id_buffer = $taglinks_by_module
 			= $object_counts = $handlers = array();
-			
+
 		// If tag_id = 'untagged' set a flag to retrieve untagged content only
 		if ($tag_id === 'untagged') {
 			$untagged_content = TRUE;
 		}
-		
+
 		// Get a list of supported item and module types; this will be used to build the $itemUrl
 		$type_module_list = $this->getClientObjects();
-		
+
 		// 1. Get a list of distinct item (object) types associated with the search parameters
 		$sprockets_tag_handler = icms_getModuleHandler('tag', 'sprockets', 'sprockets');
-		$sql = "SELECT " . icms::$xoopsDB->escape($this->table) . ".item, COUNT(*) FROM " 
+		$sql = "SELECT " . icms::$xoopsDB->escape($this->table) . ".item, COUNT(*) FROM "
 				. icms::$xoopsDB->escape($this->table);
 		if (!$untagged_content) {
-				$sql .= " INNER JOIN " . icms::$xoopsDB->escape($sprockets_tag_handler->table) 
-					. " ON " . icms::$xoopsDB->escape($this->table) . ".tid = " 
+				$sql .= " INNER JOIN " . icms::$xoopsDB->escape($sprockets_tag_handler->table)
+					. " ON " . icms::$xoopsDB->escape($this->table) . ".tid = "
 					. icms::$xoopsDB->escape($sprockets_tag_handler->table) . ".tag_id";
 		}
 		$sql .= " WHERE";
@@ -402,7 +403,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 				}
 			}
 		}
-		
+
 		// If you want to retrieve untagged content, need to explictly request it
 		// If you merely don't specify tag_id, this means retrieve all *tagged* content
 		// The way it is structured, tag_id = 0 should *only* be run if untagged content requested
@@ -423,21 +424,21 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 				$items[] = $row['item'];
 			}
 		}
-		
+
 		// 2. Use the item list to check client modules are active and load required handlers
 		// Note that $items is based on whitelisted user input or on results from the database,
-		// so the only thing that needs to be checked is whether the relevant modules are installed 
+		// so the only thing that needs to be checked is whether the relevant modules are installed
 		// and activated
 		if ($items) {
 			$clientObjects = $this->getClientObjects();
 			foreach ($items as $key => &$itm) {
 				if (icms_get_module_status($clientObjects[$itm])) {
-					// NOTE: The next line causes a white screen when trying to re-enable a 
-					// disabled module in the module admin page. Not sure why, since this code 
-					// should not run if the module is inactive. Looks like the module status is 
-					// evaluating as TRUE before it is fully operational. The bug does not seem 
+					// NOTE: The next line causes a white screen when trying to re-enable a
+					// disabled module in the module admin page. Not sure why, since this code
+					// should not run if the module is inactive. Looks like the module status is
+					// evaluating as TRUE before it is fully operational. The bug does not seem
 					// to have any consequences however, page loads normally on refresh.
-					$handlers[$itm] = icms_getModuleHandler($itm, $clientObjects[$itm], 
+					$handlers[$itm] = icms_getModuleHandler($itm, $clientObjects[$itm],
 						$clientObjects[$itm]);
 				} else {
 					unset($items[$key]);
@@ -446,12 +447,12 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		} else {
 			$nothing_to_display = TRUE;
 		}
-		
+
 		// 3. Get a count of the total number of search results available. Unfortunately, this is an
 		// expensive thing to do in a cross-module table search (one query per object type). If
-		// online_status were recorded in the taglinks table this could be reduced to a single 
+		// online_status were recorded in the taglinks table this could be reduced to a single
 		// query (counting the number of taglinks). A better approach might be to treat
-		// sprockets_taglinks as a shared table, that all Gone Native modules will try to set up 
+		// sprockets_taglinks as a shared table, that all Gone Native modules will try to set up
 		// if it doesn't exist. That way client modules can start documenting untagged content
 		// even before Sprockets is installed.
 		if ($items) {
@@ -460,23 +461,23 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 			foreach ($items as $itms) {
 				$i--;
 				$sql .= "(SELECT `item`, COUNT(DISTINCT `item`, `iid`)";
-				$sql .= " FROM " . icms::$xoopsDB->escape($this->table) 
+				$sql .= " FROM " . icms::$xoopsDB->escape($this->table)
 						. " INNER JOIN " . icms::$xoopsDB->escape($handlers[$itms]->table) . " ON "
-						. icms::$xoopsDB->escape($this->table) . ".iid  = " 
+						. icms::$xoopsDB->escape($this->table) . ".iid  = "
 						. icms::$xoopsDB->escape($handlers[$itms]->table) . "." . $itms . "_id";
 				if (!$untagged_content) {
-					$sql .= " INNER JOIN " . icms::$xoopsDB->escape($sprockets_tag_handler->table) 
+					$sql .= " INNER JOIN " . icms::$xoopsDB->escape($sprockets_tag_handler->table)
 						. " ON " . icms::$xoopsDB->escape($this->table) . ".tid = "
 						. icms::$xoopsDB->escape($sprockets_tag_handler->table) . ".tag_id";
 				}
-				$sql .= " WHERE " . icms::$xoopsDB->escape($this->table) . ".iid  = " 
+				$sql .= " WHERE " . icms::$xoopsDB->escape($this->table) . ".iid  = "
 						. icms::$xoopsDB->escape($handlers[$itms]->table) . "." . $itms . "_id";
 				$sql .= " AND " . icms::$xoopsDB->escape($this->table) . ".item = '" . $itms . "'";
 				if ($untagged_content) {
 					$sql .= " AND " . icms::$xoopsDB->escape($this->table) . ".tid = '0'";
 				} elseif ($tag_id) {
 					$sql .= " AND (" . icms::$xoopsDB->escape($this->table) . ".tid = " . "'"
-						. $tag_id . "' AND " 
+						. $tag_id . "' AND "
 						. icms::$xoopsDB->escape($sprockets_tag_handler->table) . ".label_type = '0')";
 				} else {
 					$sql .= " AND " . icms::$xoopsDB->escape($sprockets_tag_handler->table)
@@ -493,7 +494,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 					$sql .= " UNION ";
 				}
 			}
-			
+
 			/////////////////////////////////////////
 			////////// Run the count query //////////
 			/////////////////////////////////////////
@@ -549,26 +550,26 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 					. "`iid`,"
 					. icms::$xoopsDB->escape($this->table) . ".mid,"
 					. "`tid`";
-				$sql .= " FROM " . icms::$xoopsDB->escape($this->table) . " INNER JOIN " 
+				$sql .= " FROM " . icms::$xoopsDB->escape($this->table) . " INNER JOIN "
 						. icms::$xoopsDB->escape($handlers[$it]->table) . " ON "
 						. icms::$xoopsDB->escape($this->table) . ".iid  = "
 						. icms::$xoopsDB->escape($handlers[$it]->table) . "." . $it . "_id";
 				if (!$untagged_content) {
 					$sql .= " INNER JOIN " . icms::$xoopsDB->escape($sprockets_tag_handler->table)
-					. " ON " . icms::$xoopsDB->escape($this->table) . ".tid = " 
+					. " ON " . icms::$xoopsDB->escape($this->table) . ".tid = "
 					. icms::$xoopsDB->escape($sprockets_tag_handler->table) . ".tag_id";
 				}
-				$sql .= " WHERE " . icms::$xoopsDB->escape($this->table) . ".iid  = " 
+				$sql .= " WHERE " . icms::$xoopsDB->escape($this->table) . ".iid  = "
 						. icms::$xoopsDB->escape($handlers[$it]->table) . "." . $it . "_id";
-				$sql .= " AND " . icms::$xoopsDB->escape($this->table) . ".item = '" . $it . "'";		
+				$sql .= " AND " . icms::$xoopsDB->escape($this->table) . ".item = '" . $it . "'";
 				if ($untagged_content) {
 					$sql .= " AND " . icms::$xoopsDB->escape($this->table) . ".tid = '0'";
 				} elseif ($tag_id) {
-					$sql .= " AND (" . icms::$xoopsDB->escape($this->table) . ".tid = " . "'" 
+					$sql .= " AND (" . icms::$xoopsDB->escape($this->table) . ".tid = " . "'"
 						. $tag_id . "' AND " . icms::$xoopsDB->escape($sprockets_tag_handler->table)
 						. ".label_type = '0')";
 				} else {
-					$sql .= " AND " . icms::$xoopsDB->escape($sprockets_tag_handler->table) 
+					$sql .= " AND " . icms::$xoopsDB->escape($sprockets_tag_handler->table)
 						. ".label_type = '0'";
 				}
 				if ($module_id) {
@@ -604,37 +605,37 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 		} else {
 			$nothing_to_display = TRUE;
 		}
-		
+
 		// Construct an itemUrl field
 		foreach ($content_array as &$content) {
 			$content['itemUrl'] = ICMS_URL . '/modules/' . $type_module_list[$content['item']]
 					. '/' . $content['item'] . '.php?' . $content['item'] . '_id=' . $content['iid'];
 		}
-		
+
 		// Prepend the $count of results
 		array_unshift($content_array, $content_count);
-		
+
 		return $content_array;
 	}
-	
+
 	private function _getUntaggedContent($module_id, $item_type, $start, $limit, $sort) {
 		return $this->_getTaggedItems('untagged', $module_id, $item_type, $start, $limit, $sort);
 	}
-	
-	private function _storeTagsForObject(&$obj, $tag_var, $label_type) {		
+
+	private function _storeTagsForObject(&$obj, $tag_var, $label_type) {
 		// Remove existing taglinks prior to saving the updated set
 		$this->_deleteTagsForObject($obj, $label_type);
-		
+
 		// Make sure this is an array (select control returns string, selectmulti returns array)
 		$tag_array = $obj->getVar($tag_var);
 		if (!is_array($tag_array) && !empty($tag_array))
 		{
 			$tag_array = array($tag_array);
 		}
-		
+
 		$count = count($tag_array);
 		$moduleObj = icms_getModuleInfo($obj->handler->_moduleName);
-		
+
 		// If there are NO tags, or ONLY the 0 element tag ('---'), flag as untagged content
 		if ($label_type == 0 && ($count == 0 || ($count == 1 && $tag_array[0] == 0))) {
 			$taglinkObj = $this->create();
@@ -659,31 +660,31 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 			}
 		}
     }
-	
+
 	private function _deleteTagsForObject(&$obj, $label_type) {
 		$criteria = $sprockets_tag_handler = $sprockets_taglink_handler = $moduleObj = '';
 		$tagList = $taglinkObjArray = $taglinks_for_deletion = array();
-		
+
 		// Taglinks know the tag id, module id, item id and item type.
-		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)), 
+		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
 				'sprockets');
 		$sprockets_taglink_handler = icms_getModuleHandler('taglink', basename(dirname(__DIR__)),
 				'sprockets');
-		
+
 		// Read a buffer of ALL tags OR categories on the system (one or the other)
 		$criteria = icms_buildCriteria(array('label_type' => $label_type));
 		$tagList = $sprockets_tag_handler->getList($criteria, TRUE);
 		unset($criteria);
-		
+
 		// Read a buffer of ALL taglinks for THIS OBJECT
 		$moduleObj = icms_getModuleInfo($obj->handler->_moduleName);
 		$criteria = icms_buildCriteria(array(
-			'mid' => $moduleObj->getVar('mid'), 
-			'iid' => $obj->id(), 
+			'mid' => $moduleObj->getVar('mid'),
+			'iid' => $obj->id(),
 			'item' => $obj->handler->_itemname));
 		$taglinkObjArray = $sprockets_taglink_handler->getObjects($criteria, TRUE);
-		
-		// Check if each taglink tid is one of the target tag/category IDs. If so, mark the 
+
+		// Check if each taglink tid is one of the target tag/category IDs. If so, mark the
 		// taglink_id for deletion
 		foreach ($taglinkObjArray as $taglink)
 		{
@@ -693,7 +694,7 @@ class SprocketsTaglinkHandler extends icms_ipf_Handler {
 				$taglinks_for_deletion[] = $taglink->getVar('taglink_id');
 			}
 		}
-		
+
 		// Delete marked taglinks
 		if (!empty($taglinks_for_deletion))
 		{
