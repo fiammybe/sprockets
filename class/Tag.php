@@ -46,16 +46,12 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		$this->setControl('navigation_element', 'yesno');
 		$this->setControl('rss', 'yesno');
 		$this->setControl('icon', array('name' => 'image'));
-		$url = ICMS_URL . '/uploads/' . basename(dirname(__DIR__)) . '/';
-		$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(__DIR__)) . '/';
+		$url = ICMS_URL . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
+		$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
 		$this->setImageDir($url, $path);
 		
 		$this->IcmsPersistableSeoObject();
 	}
-	
-	////////////////////////////////////////////////////////
-	//////////////////// PUBLIC METHODS ////////////////////
-	////////////////////////////////////////////////////////
 
 	/**
 	 * Overriding the IcmsPersistableObject::getVar method to assign a custom method on some
@@ -66,137 +62,21 @@ class SprocketsTag extends icms_ipf_seo_Object {
 	 * @return mixed value of the field that is requested
 	 */
 	
-	public function getVar($key, $format = 's') {
-		if ($format == 's' && in_array($key, array ('label_type', 'parent_id', 'icon',
+	function getVar($key, $format = 's') {
+		if ($format == 's' && in_array($key, array ('label_type', 'parent_id', 'mid', 'icon',
 			'navigation_element', 'rss'))) {
 			return call_user_func(array ($this,	$key));
 		}
 		return parent :: getVar($key, $format);
 	}
-	
+
 	/**
 	 * Converts label_type to a human readable value (tag, category or both)
 	 *
 	 * @return string
 	 */
+
 	public function label_type() {
-		return $this->_label_type();
-	}
-	
-	/**
-	 * Converts parent_id into a human readable string
-	 *
-	 * @return string
-	 */
-	public function parent_id() {
-		return $this->_parent_id();
-	}
-	
-	/**
-	 * Converts navigation_element into a human readable icon (yes/no)
-	 *
-	 * @return string
-	 */
-	public function navigation_element() {
-		return $this->_navigation_element();
-	}
-	
-	/**
-	 * Converts the icon name into a html <image /> tag for display
-	 *
-	 * @return mixed
-	 */
-
-	public function icon() {
-		return $this->_icon();
-	}
-	
-	/**
-	 * Returns an icon indicating RSS feed status (online/offline) with link toggle
-	 *
-	 * @return string 
-	 */
-	public function rss() {
-		return $this->_rss();
-	}
-	
-	/*
-	 * Performs the same function as toArray(), but does not permit getVar() overrides for specified
-	 * fields (ie. those requiring query lookups), so that they can be *manually* overriden from 
-	 * buffers. This can substantially reduce the number of queries when converting a large number 
-	 * of objects (for example, on an index page).
-	 * 
-	 * Todo: Change this to an override of the parent toArray() method
-	 * 
-	 * @return array
-	 */
-	public function toArrayWithoutOverrides() {
-		return $this->_toArrayWithoutOverrides();
-	}
-	
-	
-	
-	/**
-	 * Returns a html snippet containing an RSS icon and link to the feed URL for a given tag
-	 * 
-	 * @param	int $clean_tag_id
-	 * @return	string 
-	 */
-	public function getRssFeedLink() {
-		return $this->_getRssFeedLink();
-	}
-	
-	/**
-	 * Alters the category object admin links to point at the category admin page
-	 */
-	public function category_admin_titles($moduleDirectory = "sprockets") {
-		$cleanModuleDirectory = icms_core_DataFilter::checkVar($moduleDirectory, 'str');
-		return $this->_category_admin_titles($cleanModuleDirectory);
-	}
-	
-	/**
-	 * Alters the category object navigation_element icon links to point at the category.php admin page
-	 *
-	 * @return string
-	 */
-	public function category_admin_navigation_element($moduleDirectory = "sprockets") {
-		$cleanModuleDirectory = icms_core_DataFilter::checkVar($moduleDirectory, 'str');
-		return $this->_category_admin_navigation_element($cleanModuleDirectory);
-	}
-	
-	/**
-	 * Alters the category object navigation_element icon links to point at the category.php admin page
-	 *
-	 * @return string
-	 */
-	public function category_admin_rss($moduleDirectory = "sprockets") {
-		$cleanModuleDirectory = icms_core_DataFilter::checkVar($moduleDirectory, 'str');
-		return $this->_category_admin_rss($cleanModuleDirectory);
-	}
-	
-	/**
-	 * Displays a custom edit action button, which links back to the category.php admin page
-	 * 
-	 * @return mixed
-	 */
-	public function edit_category_action() {
-		return $this->_edit_category_action();
-	}
-	
-	/**
-	 * Displays a custom delete action button, which links back to the category.php admin page
-	 * 
-	 * @return mixed
-	 */
-	public function delete_category_action() {
-		return $this->_delete_category_action();
-	}
-	
-	/////////////////////////////////////////////////////////
-	//////////////////// PRIVATE METHODS ////////////////////
-	/////////////////////////////////////////////////////////
-
-	private function _label_type() {
 
 		$label_type = $this->getVar('label_type', 'e');
 		
@@ -211,14 +91,18 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		}
 	}
 	
-	
-	private function _parent_id() {
+	/**
+	 * Converts parent_id into a human readable string
+	 *
+	 * @return string
+	 */
+	public function parent_id() {
 		
 		$parent_id = $this->getVar('parent_id', 'e');
 		
 		if ($parent_id) {
 			
-			$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
+			$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
 					'sprockets');
 
 			$parentObj = $sprockets_tag_handler->get($parent_id);
@@ -228,10 +112,40 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return FALSE;
 	}
 	
-	private function _navigation_element() {
+	/**
+	 * Converts mid into a human readable module name
+	 *
+	 * As 
+	 * 
+	 * @return string
+	 */
+	public function mid()
+	{
+		$moduleObj = $moduleName = '';
+		
+		if (!empty($mid))
+		{
+			// Get the module object and retrieve its name
+			$module_handler = icms::handler('icms_module');
+			$moduleObj = $module_handler->getByDirname("sprockets");
+			$moduleName = $moduleObj->getVar('name');
+			return $moduleName;
+		}
+		return FALSE;
+	}
+	
+	
+	/**
+	 * Converts navigation_element into a human readable icon (yes/no)
+	 *
+	 * @return string
+	 */
+	public function navigation_element() {
+		
 		$navigation_element = $button = '';
+		
 		$navigation_element = $this->getVar('navigation_element', 'e');
-		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__DIR__))
+		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
 				. '/admin/tag.php?tag_id=' . $this->id() . '&amp;op=toggleNavigationElement">';
 		if ($navigation_element == FALSE) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="'
@@ -245,7 +159,13 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $button;
 	}
 
-	private function _icon() {
+	/**
+	 * Converts the icon name into a html <image /> tag for display
+	 *
+	 * @return mixed
+	 */
+
+	public function icon() {
 		$icon = $this->getVar('icon', 'e');
 		$title = $this->getVar('title', 'e');
 		$path = $this->getImageDir();
@@ -257,9 +177,15 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		}
 	}
 	
-	private function _rss() {
+	/**
+	 * Returns an icon indicating RSS feed status (online/offline) with link toggle
+	 *
+	 * @return string 
+	 */
+	public function rss() {
 		$status = $this->getVar('rss', 'e');
-		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__DIR__))
+
+		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
 				. '/admin/tag.php?tag_id=' . $this->id() . '&amp;op=toggleStatus">';
 		if ($status == FALSE) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' 
@@ -271,7 +197,13 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $button;
 	}
 	
-	private function _toArrayWithoutOverrides() {
+	/*
+	 * Performs the same function as toArray(), but does not permit getVar() overrides for specified
+	 * fields (ie. those requiring query lookups), so that they can be *manually* overriden from 
+	 * buffers. This can substantially reduce the number of queries when converting a large number 
+	 * of objects (for example, on an index page).
+	 */
+	public function toArrayWithoutOverrides() {
 		$ret = $vars = $blacklisted_vars = array();
 		
 		// These are the properties that we don't want converted, because each one costs a query
@@ -302,19 +234,29 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $ret;
 	}
 	
-	private function _getRssFeedLink() {
+	/**
+	 * Returns a html snippet containing an RSS icon and link to the feed URL for a given tag
+	 * 
+	 * @param	int $clean_tag_id
+	 * @return	string 
+	 */
+	public function getRssFeedLink() {
 			
 		$rss_snippet = '<a href="' . ICMS_URL .
-			'/modules/' . basename(dirname(__DIR__))
+			'/modules/' . basename(dirname(dirname(__FILE__)))
 			. '/rss.php?tag_id=' . $this->id() . '" title="' . _CO_SPROCKETS_SUBSCRIBE_RSS_ON 
 			. $this->getVar('title', 'e') . '"><img src="' . ICMS_URL . '/modules/' 
-			. basename(dirname(__DIR__)) . '/images/rss.png" alt="' . _CO_SPROCKETS_RSS
+			. basename(dirname(dirname(__FILE__))) . '/images/rss.png" alt="' . _CO_SPROCKETS_RSS
 			. '" /></a>';
 		
 		return $rss_snippet;		
 	}
 	
-	private function _category_admin_titles($moduleDirectory ) {
+	/**
+	 * Alters the category object admin links to point at the category admin page
+	 */
+	public function category_admin_titles( $moduleDirectory = "sprockets" )
+	{
 		$title = $this->getVar('title', 'e');
 		$title = '<a href="' . ICMS_URL . '/modules/' . $moduleDirectory
 			. '/admin/category.php?tag_id=' . $this->getVar("tag_id") . '">'
@@ -323,7 +265,12 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $title;
 	}
 	
-	private function _category_admin_navigation_element($moduleDirectory) {
+	/**
+	 * Alters the category object navigation_element icon links to point at the category.php admin page
+	 *
+	 * @return string
+	 */
+	public function category_admin_navigation_element( $moduleDirectory = "sprockets" ) {
 		
 		$navigation_element = $button = '';
 		
@@ -342,7 +289,13 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $button;
 	}
 	
-	private function _category_admin_rss($moduleDirectory) {
+	/**
+	 * Alters the category object navigation_element icon links to point at the category.php admin page
+	 *
+	 * @return string
+	 */
+	public function category_admin_rss( $moduleDirectory = "sprockets" )
+	{
 		$status = $this->getVar('rss', 'e');
 
 		$button = '<a href="' . ICMS_URL . '/modules/' . $moduleDirectory
@@ -357,7 +310,13 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $button;
 	}
 	
-	private function _edit_category_action() {
+	/**
+	 * Displays a custom edit action button, which links back to the category.php admin page
+	 * 
+	 * @return mixed
+	 */
+	public function edit_category_action()
+	{
 		$button = '';	
 		$button = '<a href="category.php?tag_id=' . $this->getVar('tag_id') . '&amp;op=mod">
 			<img src="' . ICMS_IMAGES_SET_URL . '/actions/edit.png" alt="' 
@@ -366,7 +325,13 @@ class SprocketsTag extends icms_ipf_seo_Object {
 		return $button;
 	}
 	
-	private function _delete_category_action() {
+	/**
+	 * Displays a custom delete action button, which links back to the category.php admin page
+	 * 
+	 * @return mixed
+	 */
+	public function delete_category_action()
+	{
 		$button = '';
 		$button = '<a href="category.php?tag_id=' . $this->getVar('tag_id') . '&amp;op=del">
 			<img src="' . ICMS_IMAGES_SET_URL . '/actions/editdelete.png" alt="' 

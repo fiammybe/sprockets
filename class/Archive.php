@@ -80,10 +80,6 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		$this->IcmsPersistableSeoObject();
 	}
 
-	////////////////////////////////////////////////////////
-	//////////////////// PUBLIC METHODS ////////////////////
-	////////////////////////////////////////////////////////
-	
 	/**
 	 * Overriding the IcmsPersistableObject::getVar method to assign a custom method on some
 	 * specific fields to handle the value before returning it
@@ -92,7 +88,6 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 	 * @param str $format format that is requested
 	 * @return mixed value of the field that is requested
 	 */
-	
 	public function getVar($key, $format = 's') {
 		if ($format == 's' && in_array($key, array ('repository_name','base_url', 'module_id',
 			'enable_archive'))) {
@@ -100,367 +95,32 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		}
 		return parent :: getVar($key, $format);
 	}
-	
+
+
 	/**
 	 * Ensures entities are escaped before sending to XML processor
 	 *
 	 * @return string
 	 */
-	
 	public function repository_name() {
-		return $this->_repository_name();
-	}
-	
-	/**
-	 * Ensures entities are escaped before sending to XML processor
-	 *
-	 * @return string
-	 */
-	
-	public function base_url() {
-		return $this->_base_url();
-	}
-	
-	/**
-	 * Returns the directory name for the module this archive services
-	 * 
-	 * @return string
-	 */
-	
-	public function module_id() {
-		return $this->_module_id();
-	}
-	
-	/**
-	 * Returns a button to enable or disable an archive object
-	 */
-	
-	public function enable_archive() {
-		return $this->_enable_archive();
-	}
-	
-	/**
-	 * Generates a standard header for OAIPMH responses
-	 *
-	 * @return string
-	 */
-	public function oai_header() {
-		return $this->_oai_header();
-	}
-	
-	/**
-	 * Generates a standard footer for OAIPMH responses
-	 *
-	 * @return string
-	 */
-	public function oai_footer() {
-		return $this->_oai_footer();
-	}
-	
-	/**
-	 * Returns basic information about the respository
-	 *
-	 * @return string
-	 */
-	public function identify() {
-		return $this->_identify();
-	}
-	
-	/**
-	 * Returns information about the available metadata formats this repository supports (only oai_dc)
-	 *
-	 * @param object $content_handler
-	 * @param string $identifier
-	 * @return string
-	 */
-	public function listMetadataFormats($content_handler, $identifier = null) {
-		if (is_object($content_handler)) {
-			$clean_handler = $content_handler;
-		} else {
-			exit;
-		}
-		if ($identifier) {
-			$clean_identifier = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($identifier, 'str', 'noencode'));
-		} else {
-			$clean_identifier = null;
-		}
-		return $this->_listMetadataFormats($clean_handler, $clean_identifier);
-	}
-	
-	/**
-	 * Returns multiple records (headers only), supports selective harvesting based on time ranges
-	 *
-	 * @param object $content_handler
-	 * @param string $metadataPrefix
-	 * @param string $from
-	 * @param string $until
-	 * @param string $set
-	 * @param string $resumptionToken
-	 * @return string
-	 */
-	public function listIdentifiers($content_handler, $metadataPrefix = null, $from = null,
-			$until = null, $set = null, $resumptionToken = null, $cursor = 0) {
-		
-		if (is_object($content_handler)) {
-			$clean_handler = $content_handler;
-		} else {
-			exit;
-		}
-		if ($metadataPrefix) {
-			$clean_metadataPrefix = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($metadataPrefix, 'str', 'noencode'));
-		} else {
-			$clean_metadataPrefix = null;
-		}
-		if ($from) {
-			$clean_from = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($from, 'str', 'noencode'));
-		} else {
-			$clean_from = null;
-		}
-		if ($until) {
-			$clean_until = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($until, 'str', 'noencode'));
-		} else {
-			$clean_until = null;
-		}
-		if ($set) {
-			$clean_set = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($set, 'str', 'noencode'));
-		} else {
-			$clean_set = null;
-		}
-		if ($resumptionToken) {
-			$clean_resumptionToken = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($resumptionToken, 'str', 'noencode'));
-		} else {
-			$clean_resumptionToken = null;
-		}
-		$clean_cursor = isset($cursor) ? (int)$cursor : 0;
-
-		return $this->_listIdentifiers($clean_handler, $clean_metadataPrefix, $clean_from, 
-				$clean_until, $clean_set, $clean_resumptionToken, $clean_cursor);
-	}
-	
-	/**
-	 * Returns the set structure of repository (sets are not supported in this implementation)
-	 *
-	 * @param string $resumptionToken
-	 * @return string
-	 */
-	public function listSets($resumptionToken = null, $cursor = 0) {
-		if ($resumptionToken) {
-			$clean_resumptionToken = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($resumptionToken, 'str', 'noencode'));
-		} else {
-			$clean_resumptionToken = null;
-		}
-		$clean_cursor = isset($cursor) ? (int)$cursor : 0;
-		
-		return $this->_listSets($clean_resumptionToken, $clean_cursor);
-	}
-	
-	/**
-	 * Returns a single complete record based on its unique oai_identifier
-	 *
-	 * @param object $content_handler
-	 * @param string $identifier
-	 * @param strimg $metadataPrefix
-	 * @return string
-	 */
-	public function getRecord($content_handler, $identifier = null, $metadataPrefix = null) {
-			if (isset($content_handler) && is_object($content_handler)) {
-				$clean_content_handler = $content_handler;
-			} else {
-				exit;
-			}
-			if ($identifier) {
-				$clean_identifier = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($identifier, 'str', 'noencode'));
-			} else {
-				$clean_identifier = null;
-			}
-			if ($metadataPrefix) {
-				$clean_metadataPrefix = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($metadataPrefix, 'str', 'noencode'));
-			} else {
-				$clean_metadataPrefix = null;
-			}
-		return $this->_getRecord($clean_content_handler, $clean_identifier, $clean_metadataPrefix);
-	}
-	
-	/**
-	 * Returns multiple records (harvest entire repository, or within specified time range)
-	 *
-	 * @param object $content_handler
-	 * @param string $metadataPrefix
-	 * @param string $from
-	 * @param string $until
-	 * @param string $set
-	 * @param string $resumptionToken
-	 * @return string
-	 */
-
-	public function listRecords($content_handler, $metadataPrefix = null, $from = null,
-		$until = null, $set = null, $resumptionToken = null, $cursor = 0) {
-		
-		if (isset($content_handler) && is_object($content_handler)) {
-			$clean_content_handler = $content_handler;
-		} else {
-			exit;
-		}
-		if ($metadataPrefix) {
-			$clean_metadataPrefix = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($metadataPrefix, 'str', 'noencode'));
-		} else {
-			$clean_metadataPrefix = null;
-		}
-		if ($from) {
-			$clean_from = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($from, 'str', 'noencode'));
-		} else {
-			$clean_from = null;
-		}
-		if ($until) {
-			$clean_until = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($until, 'str', 'noencode'));
-		} else {
-			$clean_until = null;
-		}
-		if ($set) {
-			$clean_set = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($set, 'str', 'noencode'));
-		} else {
-			$clean_set = null;
-		}
-		if ($resumptionToken) {
-			$clean_resumptionToken = icms::$xoopsDB->escape(icms_core_DataFilter::checkVar($resumptionToken, 'str', 'noencode'));
-		} else {
-			$clean_resumptionToken = null;
-		}
-		$clean_cursor = isset($cursor) ? (int)$cursor : 0;
-		
-		return $this->_listRecords($clean_content_handler, $clean_metadataPrefix, $clean_from,
-				$clean_until, $clean_set, $clean_resumptionToken, $clean_cursor);
-	}
-	
-	/**
-	 * Returns a fixed response (error message) to any non-recognised verb parameter
-	 *
-	 * @return string
-	 */
-	public function BadVerb() {
-		return $this->_BadVerb();
-	}
-	
-	// UTILITIES
-
-	/**
-	 * Converts common fields to human readable
-	 *
-	 * @param mixed array $content
-	 * @param obj $contentObj
-	 * @return mixed Array $content
-	 */
-	public function convert_shared_fields($content, $contentObj) {
-		return $this->_convert_shared_fields($content, $contentObj);
-	}
-	
-	/**
-	 * Utility function for displaying error messages to bad OAIPMH requests
-	 *
-	 * @param string $error
-	 * @param string $message
-	 * @return string
-	 */
-	public function throw_error($error, $message) {
-		$clean_error = !empty($error) ? icms_core_DataFilter::checkVar($error, 'str') : FALSE;
-		$clean_message = !empty($message) ? icms_core_DataFilter::checkVar($message, 'str') : FALSE;
-		return $this->_throw_error($clean_error, $clean_message);
-	}
-	
-	/**
-	 * Converts a single record into OAIPMH spec XML
-	 *
-	 * @param array $record
-	 * @return string 
-	 */
-	public function record_to_xml($record) {
-		return $this->_record_to_xml($record);
-	}
-	
-	/**
-	 * Checks that a requested time range does not occur before the repository's earliest timestamp
-	 *
-	 * @param string $time
-	 * @return bool
-	 */
-	public function not_before_earliest_datestamp($time) {
-		$clean_time = !empty($time) ? icms_core_DataFilter::checkVar($time, 'str') : FALSE;
-		return $this->_not_before_earliest_datestamp($clean_time);
-	}
-	
-	/**
-	 * Retrieves the earliest content object associated with this Archive
-	 * 
-	 * @return string
-	 */
-	public function getEarliestDateStamp() {
-		return $this->_getEarliestDateStamp();
-	}
-	
-	/**
-	 * Validates the datetime syntax, also checks that data does not exceed reasonable values
-	 *
-	 * @param string $time
-	 * @return bool
-	 */
-	public function validate_datetime($time) {
-		$clean_time = !empty($time) ? icms_core_DataFilter::checkVar($time, 'str', 'noencode') : FALSE;
-		return $this->_validate_datetime($clean_time);
-	}
-	
-	/**
-	 * Checks that the OAIPMH $from parameter precedes the $until parameter
-	 *
-	 * Used by ListIdentifiers() and ListRecords()
-	 *
-	 * @param string $from
-	 * @param string $until
-	 * @return boolean
-	 */
-	public function from_precedes_until ($from, $until) {
-		$clean_from = !empty($from) ? icms_core_DataFilter::checkVar($from, 'str') : FALSE;
-		$clean_until = !empty($until) ? icms_core_DataFilter::checkVar($until, 'str') : FALSE;
-		return $this->_from_precedes_until($clean_from, $clean_until);
-	}
-	
-	/**
-	 * Forces the XML response to be sent in UTF8, converts it in some other character set.
-	 *
-	 * @param mixed $data
-	 * @return mixed
-	 */
-	public function data_to_utf8($data) {
-		return $this->_data_to_utf8($data);
-	}
-	
-	/**
-	 * Converts a timestamp into the OAIPMH datetime format
-	 *
-	 * @param string $timestamp
-	 * @return string
-	 */
-	public function timestamp_to_oaipmh_time($timestamp) {
-		$clean_timestamp = (int)$timestamp;
-		return $this->_timestamp_to_oaipmh_time($clean_timestamp);
-	}
-
-	/////////////////////////////////////////////////////////
-	//////////////////// PRIVATE METHODS ////////////////////
-	/////////////////////////////////////////////////////////
-
-	private function _repository_name() {
 		$repositoryName = htmlspecialchars(html_entity_decode($this->getVar('repository_name', 'e'),
 			ENT_QUOTES, 'UTF-8'), ENT_NOQUOTES, 'UTF-8');
 		return $repositoryName;
 	}
 
-	private function _base_url() {
+	/**
+	 * Ensures entities are escaped before sending to XML processor
+	 *
+	 * @return string
+	 */
+	public function base_url() {
 		$baseURL = htmlspecialchars(html_entity_decode($this->getVar('base_url', 'e'), ENT_QUOTES,
 			'UTF-8'), ENT_NOQUOTES, 'UTF-8');
 		return $baseURL;
 	}
 
-	private function _module_id() {
+	
+	public function module_id() {
 		
 		$module = $module_id = $module_handler = '';
 		
@@ -471,10 +131,10 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $module->getVar('dirname');
 	}
 	
-	private function _enable_archive() {
+	public function enable_archive() {
 		$status = $this->getVar('enable_archive', 'e');
 
-		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__DIR__))
+		$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
 				. '/admin/archive.php?archive_id=' . $this->id() . '&amp;op=toggleStatus">';
 		if ($status == 0) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' 
@@ -488,7 +148,12 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $button;
 	}
 	
-	private function _oai_header() {
+	/**
+	 * Generates a standard header for OAIPMH responses
+	 *
+	 * @return string
+	 */
+	public function oai_header() {
 		$header = '';
 		$timestamp = time();
 
@@ -506,14 +171,24 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $header;
 	}
 
-	private function _oai_footer() {
+	/**
+	 * Generates a standard footer for OAIPMH responses
+	 *
+	 * @return string
+	 */
+	public function oai_footer() {
 		$footer ='</OAI-PMH>';
 		return $footer;
 	}
 
 	////////// OPEN ARCHIVE INITIATIVE METHODS - MINIMAL IMPLEMENTATION AS PER THE GUIDELINES //////
 
-	private function _identify() {
+	/**
+	 * Returns basic information about the respository
+	 *
+	 * @return string
+	 */
+	public function identify() {
 		// input validation: none required
 		// throws: badArgument (how? no arguments are accepted so there is nothing to test for)
 		$response = $deletedRecord = '';
@@ -537,7 +212,14 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 	
-	private function _listMetadataFormats($content_handler, $identifier) {
+	/**
+	 * Returns information about the available metadata formats this repository supports (only oai_dc)
+	 *
+	 * @param object $content_handler
+	 * @param string $identifier
+	 * @return string
+	 */
+	public function listMetadataFormats($content_handler, $identifier = null) {
 
 		// accepts an optional identifier to enquire about formats available for a particular record
 		// throws badArgument (how? there are no required arguments; if identifier is wrong the
@@ -609,16 +291,27 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 
-	private function _listIdentifiers($content_handler, $metadataPrefix, $from, $until, $set,
-			$resumptionToken, $cursor) {
-		
+	/**
+	 * Returns multiple records (headers only), supports selective harvesting based on time ranges
+	 *
+	 * @param object $content_handler
+	 * @param string $metadataPrefix
+	 * @param string $from
+	 * @param string $until
+	 * @param string $set
+	 * @param string $resumptionToken
+	 * @return string
+	 */
+	public function listIdentifiers($content_handler, $metadataPrefix = null, $from = null,
+			$until = null, $set = null, $resumptionToken = null, $cursor = null) {
+
 		$haveResults = FALSE; // flag if any records were returned by query
 		$rows = array();
 
 		$response = $this->oai_header();
 		
 		// also modifies adds to $response
-		$rows = $this->_lookupRecords($content_handler, 'ListIdentifiers', $response,
+		$rows = $this->lookupRecords($content_handler, 'ListIdentifiers', $response,
 				$metadataPrefix, $from, $until, $set, $resumptionToken, $cursor);
 
 		// if an object was in fact returned proceed to process
@@ -650,7 +343,13 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 
-	private function _listSets($resumptionToken, $cursor) {
+	/**
+	 * Returns the set structure of repository (sets are not supported in this implementation)
+	 *
+	 * @param string $resumptionToken
+	 * @return string
+	 */
+	public function listSets($resumptionToken = null, $cursor = null) {
 		// accepts optional resumptionToken
 		// throws badArgument (no need to implement, as resumption tokens are not accepted)
 
@@ -674,7 +373,15 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 
-	private function _getRecord($content_handler, $identifier, $metadataPrefix) {
+	/**
+	 * Returns a single complete record based on its unique oai_identifier
+	 *
+	 * @param object $content_handler
+	 * @param string $identifier
+	 * @param strimg $metadataPrefix
+	 * @return string
+	 */
+	public function getRecord($content_handler, $identifier = null, $metadataPrefix = null) {
 		$record = $response = $dc_identifier = '';
 		$valid = TRUE;
 		$schema = 'oai-identifier.xsd';
@@ -749,7 +456,7 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 				}
 				
 				// subject (tags)
-				$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
+				$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
 				if ($sprocketsModule) {
 					$content['subject'] = array();
 					$sprockets_tag_handler = icms_getModuleHandler('tag',
@@ -780,15 +487,27 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 
-	private function _listRecords($content_handler, $metadataPrefix, $from, $until, $set,
-			$resumptionToken, $cursor) {
+	/**
+	 * Returns multiple records (harvest entire repository, or within specified time range)
+	 *
+	 * @param object $content_handler
+	 * @param string $metadataPrefix
+	 * @param string $from
+	 * @param string $until
+	 * @param string $set
+	 * @param string $resumptionToken
+	 * @return string
+	 */
+
+	public function listRecords($content_handler, $metadataPrefix = null, $from = null,
+		$until = null, $set = null, $resumptionToken = null, $cursor = null) {
 
 		$haveResults = FALSE; // flags if any records were returned by query
 		$contentArray = array();
 		
 		$response = $this->oai_header();
 		// also modifies adds to $response
-		$contentArray = $this->_lookupRecords($content_handler, 'ListRecords', $response,
+		$contentArray = $this->lookupRecords($content_handler, 'ListRecords', $response,
 			$metadataPrefix, $from,	$until, $set, $resumptionToken, $cursor);
 
 		// if there are some contents
@@ -802,8 +521,8 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 			// doing this outside of the main loop avoids massive numbers of redundant queries
 			// objects use their ids as keys in the arrays for easy lookup
 
-			$sprockets_rights_handler = icms_getModuleHandler('rights', 
-					$sprocketsModule->getVar('dirname'), 'sprockets');
+			$sprockets_rights_handler = icms_getModuleHandler('rights', $sprocketsModule->getVar('dirname'),
+				'sprockets');
 
 			$rightsObjArray = $sprockets_rights_handler->getObjects(null, TRUE);
 			$system_mimetype_handler = icms_getModuleHandler('mimetype', 'system');			
@@ -834,6 +553,7 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 				if (!empty($content['rights'])) {
 					$content['rights'] = strip_tags($content['rights']);
 				}
+	
 				$records .= $this->record_to_xml($content);
 			}
 		}
@@ -849,13 +569,18 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 
-	private function _BadVerb() {
+	/**
+	 * Returns a fixed response (error message) to any non-recognised verb parameter
+	 *
+	 * @return string
+	 */
+	public function BadVerb() {
 		$response = '';
 
 		$response = $this->oai_header();
 		$response .= '<request>' . $this->getVar('base_url') . '</request>';
 		$response .= $this->throw_error('badVerb', 'Bad verb, request not compliant with '
-			. 'OAIPMH specification'); // Do not move to language file, this is a specification response
+			. 'OAIPMH specification');
 		$response .= $this->oai_footer();
 
 		// check if the character encoding is UTF-8 (required by XML), if not, convert it
@@ -867,26 +592,29 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 
 	// UTILITIES
 
-	/**
-	 * Retrieves content objects from the database on behalf of ListIdentifiers() and ListRecords()
-	 *
-	 * Note that ListIdentifiers() and ListRecords() are responsible for sanitising input to this 
-	 * method
-	 * 
-	 * @param object $content_handler
-	 * @param string $requestVerb
-	 * @param string $response
-	 * @param string $metadataPrefix
-	 * @param string $from
-	 * @param string $until
-	 * @param string $set
-	 * @param string $resumptionToken
-	 * @return array mixed
-	 */
-	private function _lookupRecords($content_handler, $requestVerb, &$response, $metadataPrefix,
-			$from, $until, $set, $resumptionToken, $cursor) {
+		/**
+		 * Retrieves content objects from the database on behalf of GetRecord() and ListRecords()
+		 *
+		 * @param object $content_handler
+		 * @param string $requestVerb
+		 * @param string $response
+		 * @param string $metadataPrefix
+		 * @param string $from
+		 * @param string $until
+		 * @param string $set
+		 * @param string $resumptionToken
+		 * @return array mixed
+		 */
+		public function lookupRecords($content_handler, $requestVerb, &$response,
+				$metadataPrefix = null, $from = null, $until = null, $set = null,
+				$resumptionToken = null, $cursor = null) {
 			
-		$sprocketsConfig = icms_getModuleConfig(basename(dirname(__DIR__)));
+		// Sanitise parameters used to build query strings
+		$clean_from = ctype_digit($from) ? $from : null;
+		$clean_until = ctype_digit($until) ? $until : null;		
+		$clean_cursor = isset($cursor) ? intval($cursor) : null;
+			
+		$sprocketsConfig = icms_getModuleConfig(basename(dirname(dirname(__FILE__))));
 
 		$valid = TRUE; // if any part of the request is invalid, this will be set to FALSE => exit
 		$response .= '<request verb="' . $requestVerb . '" metadataPrefix="' . $metadataPrefix . '"';
@@ -1096,14 +824,21 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 				
 				// pass the resumption token back to $response, if there is one
 				$response .= '<resumptionToken completeListSize="'
-						. $completeListSize['count(*)']	. '" cursor="' . $next_cursor . '">' 
-						. $token . '</resumptionToken>';	
+						. $completeListSize['count(*)']	. '" cursor="' . $next_cursor . '">' . $token 
+						. '</resumptionToken>';	
 			}
 			return $contentArray;
 		}
 	}
 
-	private function _convert_shared_fields($content, $contentObj) {
+	/**
+	 * Converts common fields to human readable
+	 *
+	 * @param mixed array $content
+	 * @param obj $contentObj
+	 * @return mixed Array $content
+	 */
+	public function convert_shared_fields($content, $contentObj) {
 		
 		// oai_identifier
 		$content['oai_identifier'] = $contentObj->getVar('oai_identifier', 'e');
@@ -1126,8 +861,7 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		if ($content['source']) {
 			$moduleName = $contentObj->handler->_moduleName;
 			$objectName = $contentObj->handler->_itemname;
-			$content['source'] = ICMS_URL . '/modules/' . $moduleName . '/' . $objectName . '.php?' 
-					. $objectName . '_id=' . $contentObj->getVar('source', 'e');
+			$content['source'] = ICMS_URL . '/modules/' . $moduleName . '/' . $objectName . '.php?' . $objectName . '_id=' . $contentObj->getVar('source', 'e');
 		}
 		
 
@@ -1139,7 +873,14 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $content;
 	}
 
-	private function _throw_error($error, $message) {
+	/**
+	 * Utility function for displaying error messages to bad OAIPMH requests
+	 *
+	 * @param string $error
+	 * @param string $message
+	 * @return string
+	 */
+	public function throw_error($error, $message) {
 
 		$response = '';
 
@@ -1180,8 +921,20 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $response;
 	}
 
-	private function _record_to_xml($record) {
-	
+	/**
+	 * Template for converting a single database record to OAIPMH spec XML
+	 *
+	 * Generates the output for each record.
+	 */
+
+	/**
+	 * Converts a single record into OAIPMH spec XML
+	 *
+	 * @param array $record
+	 * @return string 
+	 */
+	public function record_to_xml($record) {
+		
 		// initialise
 		$xml = $datestamp = '';
 		$dublin_core_fields = array(
@@ -1258,11 +1011,17 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		$xml .= '</oai_dc:dc>';
 		$xml .= '</metadata>';
 		$xml .= '</record>';
-		
 		return $xml;
 	}
 
-	private function _not_before_earliest_datestamp($time) {
+	/**
+	 * Checks that a requested time range does not occur before the repository's earliest timestamp
+	 *
+	 * @param string $time
+	 * @return bool
+	 */
+
+	public function not_before_earliest_datestamp($time) {
 		$request_date_stamp = $time;
 		$earliest_date_stamp = $this->getEarliestDateStamp();
 		$request_date_stamp = str_replace('Z', '', $request_date_stamp);
@@ -1280,13 +1039,27 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $validity;
 	}
 	
-	private function _getEarliestDateStamp() {
+	/**
+	 * Retrieves the earliest content object associated with this Archive
+	 * 
+	 * @return string
+	 */
+	public function getEarliestDateStamp() {
 		$earliest_date_stamp = $this->getVar('earliest_date_stamp', 'e');
 		$earliest_date_stamp = $this->timestamp_to_oaipmh_time($earliest_date_stamp);
 		return $earliest_date_stamp;
 	}
+	
 
-	private function _validate_datetime($time) {
+	// validate datetime syntax, also checks data does not exceed reasonable values
+
+	/**
+	 * Validates the datetime syntax, also checks that data does not exceed reasonable values
+	 *
+	 * @param string $time
+	 * @return bool
+	 */
+	public function validate_datetime($time) {
 		$valid = TRUE;
 
 		if (preg_match("/^([1-3][0-9]{3,3})-(0?[1-9]|1[0-2])-(0?[1-9]|[1-2][0-9]|3[0-1])\s([0-1][0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9])$/", $time)) {
@@ -1321,7 +1094,16 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $valid;
 	}
 	
-	private function _from_precedes_until ($from, $until) {
+	/**
+	 * Checks that the OAIPMH $from parameter precedes the $until parameter
+	 *
+	 * Used by ListIdentifiers() and ListRecords()
+	 *
+	 * @param string $from
+	 * @param string $until
+	 * @return boolean
+	 */
+	public function from_precedes_until ($from, $until) {
 
 		$valid = FALSE;
 		$from_datetime = $until_datetime = '';
@@ -1337,7 +1119,13 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		return $valid;
 	}
 
-	private function _data_to_utf8($data) {
+	/**
+	 * Forces the XML response to be sent in UTF8, converts it in some other character set.
+	 *
+	 * @param <type> $data
+	 * @return <type>
+	 */
+	public function data_to_utf8($data) {
 		$converted = '';
 
 		if (_CHARSET !== 'utf-8') {
@@ -1348,7 +1136,13 @@ class SprocketsArchive extends icms_ipf_seo_Object {
 		}
 	}
 
-	private function _timestamp_to_oaipmh_time($timestamp) {
+	/**
+	 * Converts a timestamp into the OAIPMH datetime format
+	 *
+	 * @param string $timestamp
+	 * @return string
+	 */
+	public function timestamp_to_oaipmh_time($timestamp) {
 		$format = 'Y-m-d\TH:i:s\Z';
 		$oai_date_time = date($format, $timestamp);
 		return $oai_date_time;

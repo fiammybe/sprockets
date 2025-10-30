@@ -21,7 +21,7 @@ function edittag($tag_id = 0)
 {
 	global $sprockets_tag_handler, $icmsAdminTpl;
 
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
 	$tagObj = $sprockets_tag_handler->get($tag_id);
 	
 	if (isset($_POST['op']) && $_POST['op'] == 'changedField' && in_array($_POST['changedField'],
@@ -103,7 +103,7 @@ include_once("admin_header.php");
 
 if (icms_get_module_status("sprockets"))
 {
-	$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
+	$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
 		'sprockets');
 
 	$clean_op = '';
@@ -112,11 +112,11 @@ if (icms_get_module_status("sprockets"))
 	$valid_op = array ('mod','changedField','addtag', 'toggleStatus', 'del',
 		'');
 
-	if (isset($_GET['op'])) $clean_op = icms_core_DataFilter::checkVar($_GET['op'], 'str');
-	if (isset($_POST['op'])) $clean_op = icms_core_DataFilter::checkVar($_POST['op'], 'str');
+	if (isset($_GET['op'])) $clean_op = htmlentities($_GET['op']);
+	if (isset($_POST['op'])) $clean_op = htmlentities($_POST['op']);
 
 	// Sanitise the tag_id
-	$clean_tag_id = isset($_GET['tag_id']) ? (int)$_GET['tag_id'] : 0 ;
+	$clean_tag_id = isset($_GET['tag_id']) ? (int) $_GET['tag_id'] : 0 ;
 
 	if (in_array($clean_op,$valid_op,TRUE)){
 	  switch ($clean_op) {
@@ -138,7 +138,7 @@ if (icms_get_module_status("sprockets"))
 		case "toggleStatus":
 
 				$status = $sprockets_tag_handler->toggleStatus($clean_tag_id, 'rss');
-				$ret = '/modules/' . basename(dirname(__DIR__)) . '/admin/category.php';
+				$ret = '/modules/' . basename(dirname(dirname(__FILE__))) . '/admin/category.php';
 				if ($status == 0) {
 					redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_TAG_RSS_DISABLED);
 				} else {
@@ -184,9 +184,9 @@ if (icms_get_module_status("sprockets"))
 			$objectTable->addCustomAction('edit_category_action');
 			$objectTable->addCustomAction('delete_category_action');
 			$objectTable->addColumn(new icms_ipf_view_Column('title', 'left', FALSE,
-					'category_admin_titles', basename(dirname(__DIR__))));
+					'category_admin_titles', basename(dirname(dirname(__FILE__)))));
 			$objectTable->addcolumn(new icms_ipf_view_Column('rss', 'left', FALSE, 
-					'category_admin_rss', basename(dirname(__DIR__)),
+					'category_admin_rss', basename(dirname(dirname(__FILE__))),
 					_AM_SPROCKETS_TAG_RSS_FEED));
 			$objectTable->addfilter('rss', 'rss_filter');
 			$objectTable->addQuickSearch('title');

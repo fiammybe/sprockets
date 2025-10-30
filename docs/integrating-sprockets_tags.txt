@@ -99,7 +99,7 @@ protected function afterSave(& $obj)
           }
      }
 
-5. Call loadTags() in your /admin/object.php file:
+5. Call loadTags() in your /admin/object.php class:
 ---------------------------------------------------
 
 /**
@@ -129,7 +129,7 @@ if (icms_get_module_status("sprockets")) {
           'sprockets');
      $sprockets_taglink_handler = icms_getModuleHandler('taglink', $sprocketsModule->getVar('dirname'), 'sprockets');
      $tag_select_box = $sprockets_tag_handler->getTagSelectBox('message.php', 
-          $clean_tag_id, _AM_CONTACT_MESSAGE_ALL_MESSAGES, icms::$module->getVar('mid'), 'yourobjectname', TRUE);
+          $clean_tag_id,     _AM_CONTACT_MESSAGE_ALL_MESSAGES, icms::$module->getVar('mid'));
      if (!empty($tag_select_box)) {
           echo '<h3>' . _AM_CONTACT_MESSAGE_FILTER_BY_TAG . '</h3>';
           echo $tag_select_box;
@@ -139,7 +139,7 @@ if (icms_get_module_status("sprockets")) {
 7. Check for a tag_id parameter on the page, which you will use as an additional $criteria to filter results
 -------------------------------------------------------------------------------------------------------------
 
-$clean_tag_id = isset($_GET['tag_id']) ?(int)$_GET['tag_id'] : 0 ;
+$clean_tag_id = isset($_GET['tag_id']) ? intval($_GET['tag_id']) : 0 ;
 
 ...
 
@@ -158,15 +158,3 @@ $tagged_message_list = "('" . implode("','", $tagged_message_list) . "')";
 // Use the list as an additional criteria to filter the persistable table or your contents page...
 $criteria = new icms_db_criteria_Compo();
 $criteria->add(new icms_db_criteria_Item('message_id', $tagged_message_list, 'IN'));
-
-...
-
-If there are no criteria, then clear/initialise the $criteria before proceeding
-if (empty($criteria)) {
-	$criteria = null;
-}
-
-...
-
-// The list of object IDs in the criteria will filter the table according to the selected tag
-$objectTable = new icms_ipf_view_Table($contact_message_handler, $criteria);

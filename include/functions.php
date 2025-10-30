@@ -22,7 +22,7 @@ if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
  */
 
 function sprockets_getModuleAdminLink($moduleName='sprockets') {
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
 	if (!$moduleName && (isset ($sprocketsModule) && is_object($sprocketsModule))) {
 		$moduleName = $sprocketsModule->getVar('dirname');
 	}
@@ -41,7 +41,7 @@ function sprockets_getModuleName($withLink = TRUE, $forBreadCrumb = FALSE, $modu
 
 	if (!$moduleName) {
 
-		$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
+		$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
 		$moduleName = $sprocketsModule->getVar('dirname');
 	}
 	
@@ -58,23 +58,13 @@ function sprockets_getModuleName($withLink = TRUE, $forBreadCrumb = FALSE, $modu
 }
 
 /**
- * List of object/module options for the recent teasers block
- * 
- * @return array $options
+ * Get month name by its ID
+ *
+ * @todo to be moved in ImpressCMS 1.2 core
+ *
+ * @param int $month_id ID of the month
+ * @return string month name
  */
-function sprockets_get_object_options() {
-	$options = array(
-		0 => _MB_SPROCKETS_CONTENT_TEASERS_ALL, // All modules
-		'article' => _MB_SPROCKETS_CONTENT_TEASERS_ARTICLE, // News module
-		//'event' => _MB_SPROCKETS_CONTENT_TEASERS_EVENT, // Events module
-		'item' => _MB_SPROCKETS_CONTENT_TEASERS_ITEM, // Catalogue module
-		'partner' => _MB_SPROCKETS_CONTENT_TEASERS_PARTNER, // Partner module
-		'programme' => _MB_SPROCKETS_CONTENT_TEASERS_PROGRAMME, // Podcast module
-		'project' => _MB_SPROCKETS_CONTENT_TEASERS_PROJECT, // Project module
-		'publication' => _MB_SPROCKETS_CONTENT_TEASERS_PUBLICATION, // Library module
-		'soundtrack' => _MB_SPROCKETS_CONTENT_TEASERS_SOUNDTRACK, // Podcast module
-		'start' => _MB_SPROCKETS_CONTENT_TEASERS_START, // CMS module
-	);
-	
-	return $options;
-}
+function sprockets_getMonthNameById($month_id) {
+	return Icms_getMonthNameById($month_id);
+	}

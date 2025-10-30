@@ -15,10 +15,6 @@ if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
 
 class SprocketsTaglink extends icms_ipf_Object {
 
-	////////////////////////////////////////////////////////
-	//////////////////// PUBLIC METHODS ////////////////////
-	////////////////////////////////////////////////////////
-	
 	/**
 	 * Constructor
 	 *
@@ -32,7 +28,7 @@ class SprocketsTaglink extends icms_ipf_Object {
 		$this->quickInitVar('taglink_id', XOBJ_DTYPE_INT, TRUE);
 		$this->quickInitVar('tid', XOBJ_DTYPE_INT, TRUE);
 		$this->quickInitVar('mid', XOBJ_DTYPE_INT, FALSE);
-		$this->quickInitVar('item', XOBJ_DTYPE_TXTBOX, TRUE);
+		$this->quickInitVar('item', XOBJ_DTYPE_TXTBOX, FALSE);
 		$this->quickInitVar('iid', XOBJ_DTYPE_INT, TRUE);
 	}
 
@@ -42,11 +38,10 @@ class SprocketsTaglink extends icms_ipf_Object {
 	 *
 	 * @param str $key key of the field
 	 * @param str $format format that is requested
-	 * 
 	 * @return mixed value of the field that is requested
 	 */
 	
-	public function getVar($key, $format = 's') {
+	function getVar($key, $format = 's') {
 		if ($format == 's' && in_array($key, array ())) {
 			return call_user_func(array ($this,	$key));
 		}
@@ -58,11 +53,44 @@ class SprocketsTaglink extends icms_ipf_Object {
 	 *
 	 * @return object $tagObj
 	 */
-	
 	public function getTag() {
-		return $this->_getTag();
+		
+		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(dirname(__FILE__))),
+			'sprockets');
+		
+		$tagObj = $sprockets_tag_handler->get($this->id());
+		
+		return $tagObj;
 	}
 	
+	public function getTagId() {
+		
+		return $this->getVar('tid', 'e');
+	}
+
+	/**
+	 * Returns the item (object) name associated with this taglink, eg 'article'
+	 *
+	 * @return string
+	 */
+	
+	public function getItem() {
+		
+		return $this->getVar('item', 'e');
+	}
+
+	/**
+	 * Returns the item_id for the linked object
+	 *
+	 * @return int
+	 */
+	
+	public function getItemId() {
+
+		return $this->getVar('iid', 'e');
+	}
+	
+
 	/**
 	 * Returns the module object for the linked object
 	 *
@@ -70,9 +98,13 @@ class SprocketsTaglink extends icms_ipf_Object {
 	 */
 	
 	public function getModuleObject() {
-		return $this->_getModuleObject();
+		
+		$module_handler = icms::handler('icms_module');
+		$module = $module_handler->getByDirname($this->getVar('mid', 'e'));
+
+		return $module;
 	}
-	
+
 	/**
 	 * Returns the linked object associated with this taglink (online objects only)
 	 *
@@ -80,35 +112,15 @@ class SprocketsTaglink extends icms_ipf_Object {
 	 */
 	
 	public function getLinkedObject() {
-		return $this->_getLinkedObject();
-	}
-	
-	/////////////////////////////////////////////////////////
-	//////////////////// PRIVATE METHODS ////////////////////
-	/////////////////////////////////////////////////////////
-	
-	private function _getTag() {
-		$sprockets_tag_handler = icms_getModuleHandler('tag', basename(dirname(__DIR__)),
-			'sprockets');
-		$tagObj = $sprockets_tag_handler->get($this->id());
-		
-		return $tagObj;
-	}
 
-	private function _getModuleObject() {
-		$module_handler = icms::handler('icms_module');
-		$module = $module_handler->getByDirname($this->getVar('mid', 'e'));
-		
-		return $module;
-	}
-
-	private function _getLinkedObject() {
-		$item = $this->getVar('item', 'e');
+		$item = $this->getItem();
 		$module = $this->getModuleObject();
-		$content_handler = icms_getModuleHandler($this->getVar('item', 'e'), $module->getVar('dirname'),
+		$content_handler = icms_getModuleHandler($this->getItem(), $module->getVar('dirname'),
 			$module->getVar('dirname'));
+		
 		$contentObj = $content_handler->get($this->getItemId());
-		if ($contentObj->getVar('online_status', 'e') == 0) {
+		if ($contentObj->getVar('online_status', 'e') == 0)
+		{
 			$contentObj = null;
 		}
 		

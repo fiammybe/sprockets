@@ -26,14 +26,14 @@ if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
 define('SPROCKETS_DB_VERSION', 1);
 
 /**
- * Updates the module. Inserts a default tag for marking untagged content, if none exists
+ * Updates the module
  *
  * @param <type> $module
  * @return bool
  */
 
 function icms_module_update_sprockets($module) {
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -41,7 +41,7 @@ function icms_module_update_sprockets($module) {
  */
 
 function authorise_mimetypes() {
-	$dirname = basename(dirname(__DIR__));
+	$dirname = basename(dirname(dirname(__FILE__)));
 	$extension_list = array('png', 'gif', 'jpg');
 	$system_mimetype_handler = icms_getModuleHandler('mimetype', 'system');
 	foreach ($extension_list as $extension) {
@@ -79,7 +79,7 @@ function authorise_mimetypes() {
 function icms_module_install_sprockets($module) {
 
 	// create an uploads directory for images
-	$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(__DIR__)) . '/';
+	$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
 	$directory_exists = $writeable = TRUE;
 
 	// check if upload directory exists, make one if not
@@ -93,14 +93,14 @@ function icms_module_install_sprockets($module) {
 	// insert some licenses so that it is ready for use on installation
 	$queries = array();
 	
-	// Add a default tag for marking content as untagged
+	// a generic tag to hold untagged content
 	$queries[] = "INSERT into " . icms::$xoopsDB->prefix('sprockets_tag')
-				. " (`title`, `description`, `label_type`) values ('Example', 'A tag for demonstration purposes, edit it or create others to suit your own purposes.', '0')";
-	
+		. " (`title`, `description`) values ('Example', 'For testing purposes, replace this with your own tags.')";
+
 	// some common licenses
 	$queries[] = "INSERT into " . icms::$xoopsDB->prefix('sprockets_rights')
 		. " (`title`, `description`) values ('Copyright, all rights reserved',
-                'This work is subject to copyright and all rights are reserved. Contact the creators for permission if you wish to modify or distribute this work.')";	
+                'This work is subject to copyright and all rights are reserved. Contact the creators for permission if you wish to modify or distribute this work.')";
 	$queries[] = "INSERT into " . icms::$xoopsDB->prefix('sprockets_rights')
 		. " (`title`, `description`, `identifier`) values ('Creative Commons Attribution',
                 'This license lets others distribute, remix, tweak, and build upon a work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licenses offered, in terms of what others can do with works licensed under Attribution.', 'http://creativecommons.org/licenses/by/3.0')";
@@ -119,10 +119,7 @@ function icms_module_install_sprockets($module) {
                 'http://creativecommons.org/licenses/by-nc-nd/3.0')";
 	$queries[] = "INSERT into " . icms::$xoopsDB->prefix('sprockets_rights')
 		. " (`title`, `description`) values ('Public domain', 'Works in the public domain are not subject to restrictions concerning their use or distribution.')";
-		$queries[] = "INSERT into " . icms::$xoopsDB->prefix('sprockets_rights')
-		. " (`title`, `description`) values ('Copyright, the Publisher',
-                'The rights to this work are owned by a third party. Please contact the author/publisher for the terms of distribution, or permission to modify or distribute this work.')";
-		
+
 	foreach($queries as $query) {
 		$result = icms::$xoopsDB->query($query);
 	}

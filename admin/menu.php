@@ -23,9 +23,11 @@ $adminmenu[$i]['title'] = _MI_SPROCKETS_RIGHTS;
 $adminmenu[$i]['link'] = 'admin/rights.php';
 
 // Included for development/debugging purpose only, uncomment to access taglinks table
-// $i++;
-// $adminmenu[$i]['title'] = _MI_SPROCKETS_TAGLINKS;
-// $adminmenu[$i]['link'] = 'admin/taglink.php';
+/*
+$i++;
+$adminmenu[$i]['title'] = _MI_SPROCKETS_TAGLINKS;
+$adminmenu[$i]['link'] = 'admin/taglink.php';
+*/
 
 $i++;
 $adminmenu[$i]['title'] = _MI_SPROCKETS_ARCHIVE;
@@ -37,7 +39,7 @@ $adminmenu[$i]['link'] = 'admin/css_editor.php';
 
 global $icmsConfig, $sprocketsConfig;
 
-$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
+$sprocketsModule = icms_getModuleInfo(basename(dirname(dirname(__FILE__))));
 
 if (isset($sprocketsModule)) {
 

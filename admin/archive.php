@@ -22,24 +22,24 @@
 function editarchive($archive_id = 0) {
 	global $sprockets_archive_handler, $icmsAdminTpl;
 
-	$sprocketsModule = icms_getModuleInfo(basename(dirname(__DIR__)));
+	$sprocketsModule = icms_getModuleInfo(basename(dirname(__FILE__, 2)));
 
 	$archiveObj = $sprockets_archive_handler->get($archive_id);
-	
+
 	if (isset($_POST['op']) && $_POST['op'] == 'changedField' && in_array($_POST['changedField'],
 		array('module_id'))) {
-		
+
 		// use the module ID to set the appropriate base URL for OAIPMH requests
 		$clean_module_id = isset($_POST['module_id']) ? (int) $_POST['module_id'] : 0 ;
-		
+
 		if ($clean_module_id !== '0') {
 			$module_handler = icms::handler('icms_module');
 			$selected_module = $module_handler->get($clean_module_id);
 			$target_directory = $selected_module->getVar('dirname');
 			$_POST['base_url'] = ICMS_URL . '/modules/' . $target_directory	. '/oaipmh_target.php';
-		}	
-		
-        $controller = new icms_ipf_Controller($sprockets_archive_handler);		
+		}
+
+        $controller = new icms_ipf_Controller($sprockets_archive_handler);
 		$controller->postDataToObject($archiveObj);
 	}
 
@@ -57,8 +57,8 @@ function editarchive($archive_id = 0) {
 
 include_once("admin_header.php");
 
-$sprockets_archive_handler = icms_getModuleHandler('archive', 
-	basename(dirname(__DIR__)), 'sprockets');
+$sprockets_archive_handler = icms_getModuleHandler('archive',
+	basename(dirname(dirname(__FILE__))), 'sprockets');
 
 $clean_op = '';
 
@@ -68,11 +68,11 @@ $clean_op = '';
 
 $valid_op = array ('mod','changedField','addarchive','toggleStatus', 'del','');
 
-if (isset($_GET['op'])) $clean_op = icms_core_DataFilter::checkVar($_GET['op'], 'str');
-if (isset($_POST['op'])) $clean_op = icms_core_DataFilter::checkVar($_POST['op'], 'str');
+if (isset($_GET['op'])) $clean_op = htmlentities($_GET['op']);
+if (isset($_POST['op'])) $clean_op = htmlentities($_POST['op']);
 
 // sanitise archive_id
-$clean_archive_id = isset($_GET['archive_id']) ? (int)$_GET['archive_id'] : 0 ;
+$clean_archive_id = isset($_GET['archive_id']) ? (int) $_GET['archive_id'] : 0 ;
 
 if (in_array($clean_op,$valid_op,TRUE)) {
 	switch ($clean_op) {
@@ -83,7 +83,7 @@ if (in_array($clean_op,$valid_op,TRUE)) {
 			editarchive($clean_archive_id);
 
 			break;
-		
+
 		case "addarchive":
 
 			$controller = new icms_ipf_Controller($sprockets_archive_handler);
@@ -91,17 +91,17 @@ if (in_array($clean_op,$valid_op,TRUE)) {
 					_AM_SPROCKETS_ARCHIVE_MODIFIED);
 
 			break;
-		
+
 		case "toggleStatus":
-		
+
 			$status = $sprockets_archive_handler->toggleStatus($clean_archive_id, 'enable_archive');
-			$ret = '/modules/' . basename(dirname(__DIR__)) . '/admin/archive.php';
+			$ret = '/modules/' . basename(dirname(dirname(__FILE__))) . '/admin/archive.php';
 			if ($status == 0) {
 				redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_ARCHIVE_DISABLED);
 			} else {
 				redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_ARCHIVE_ENABLED);
 			}
-			
+
 		break;
 
 		case "del":
@@ -115,7 +115,7 @@ if (in_array($clean_op,$valid_op,TRUE)) {
 
 			icms_cp_header();
 			$sprocketsModule->displayAdminMenu(3, _AM_SPROCKETS_ARCHIVES);
-			
+
 			// advise that only one archive object can be created per client module
 			echo _CO_SPROCKETS_ONLY_ONE_ARCHIVE_PER_MODULE;
 
@@ -134,7 +134,7 @@ if (in_array($clean_op,$valid_op,TRUE)) {
 
 			$objectTable->addIntroButton('addarchive', 'archive.php?op=mod',
 				_AM_SPROCKETS_ARCHIVE_CREATE);
-			
+
 			$icmsAdminTpl->assign('sprockets_archive_table', $objectTable->fetch());
 			$icmsAdminTpl->display('db:sprockets_admin_archive.html');
 

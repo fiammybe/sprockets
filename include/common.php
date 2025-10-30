@@ -13,7 +13,7 @@
 if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
 
 if(!defined("SPROCKETS_DIRNAME")) define("SPROCKETS_DIRNAME",
-		$modversion['dirname'] = basename(dirname(__DIR__)));
+		$modversion['dirname'] = basename(dirname(dirname(__FILE__))));
 if(!defined("SPROCKETS_URL")) define("SPROCKETS_URL", ICMS_URL . '/modules/'
 		. SPROCKETS_DIRNAME.'/');
 if(!defined("SPROCKETS_ROOT_PATH")) define("SPROCKETS_ROOT_PATH", ICMS_ROOT_PATH.'/modules/' 

@@ -21,19 +21,48 @@ class SprocketsRightsHandler extends icms_ipf_Handler {
 		parent::__construct($db, 'rights', 'rights_id', 'title', 'description',
 			'sprockets');
 	}
-	
-	////////////////////////////////////////////////////////
-	//////////////////// PUBLIC METHODS ////////////////////
-	////////////////////////////////////////////////////////
 
-	/**
-	 * Returns a list of Rights
-	 * @return array
-	 */
+	/*
+     * Returns a list of Rights (array)
+	*/
 	public function getRights() {
-		return $this->_getRights();
+		return $this->getList();
 	}
 	
+	/**
+	 * Returns a select box of available tags
+	 *
+	 * @param int $selected
+	 * @param string $zero_option_message
+	 * @return string $form
+	 */
+	
+	public function getTagSelectBox($selected = null, $zero_option_message = '---',
+			$navigation_elements_only = TRUE) {
+		
+		$form = $criteria = '';
+		$tagList = array();
+
+		if ($navigation_elements_only) {
+			$criteria = icms_buildCriteria(array('navigation_element' => TRUE));
+		}
+
+		$tagList = array(0 => $zero_option_message) + $this->getList($criteria);
+
+		$form = '<div><form name="tag_selection_form" action="article.php" method="get">';
+		$form .= '<select name="tag_id" id="tag_id" onchange="this.form.submit()">';
+		foreach ($tagList as $key => $value) {
+			if ($key == $selected) {
+			$form .= '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+			} else {
+				$form .= '<option value="' . $key . '">' . $value . '</option>';
+			}
+		}
+		$form .= '</select></form></div>';
+
+		return $form;
+	}
+
 	/**
 	 * Returns an array of rights, optionally with links
 	 * 
@@ -43,19 +72,6 @@ class SprocketsRightsHandler extends icms_ipf_Handler {
 	 * @return array 
 	 */
 	public function get_rights_buffer($with_links = FALSE) {
-		$clean_with_links = bool($with_links);
-		return $this->_get_rights_buffer($clean_with_links);
-	}
-	
-	/////////////////////////////////////////////////////////
-	//////////////////// PRIVATE METHODS ////////////////////
-	/////////////////////////////////////////////////////////
-
-	private function _getRights() {
-		return $this->getList();
-	}
-	
-	private function _get_rights_buffer($with_links = FALSE) {
 		
 		$rights_object_array = $rights_buffer = array();
 		

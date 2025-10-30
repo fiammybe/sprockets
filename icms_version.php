@@ -19,8 +19,8 @@ $modversion = array(
   'name'=> _MI_SPROCKETS_MD_NAME,
   'version'=> '2.1',
   'description'=> _MI_SPROCKETS_MD_DESC,
-  'author'=> "David Janssens",
-  'credits'=> "Previous versions by Madfish (Simon Wilkinson).Skeleton code generated with ImBuilding. Module icon by David Lanham http://dlanham.com/",
+  'author'=> "fiammybe (David Janssens)",
+  'credits'=> "Original module developed by Madfish (Simon Wilkinson). Module icon by David Lanham http://dlanham.com/",
   'help'=> "",
   'license'=> "GNU General Public License (GPL)",
   'official'=> 0,
@@ -32,23 +32,23 @@ $modversion = array(
   'image'=> "images/icon_big.png", /* for backward compatibility */
 
 /**  Development information */
-  'status_version'=> "2.1 RC",
-  'status'=> "RC",
-  'date'=> "22 November 2023",
-  'author_word'=> "This version of Sprockets is compatible with ImpressCMS V1.3.x.",
+  'status_version'=> "2.1",
+  'status'=> "Final",
+  'date'=> "30/10/2025",
+  'author_word'=> "This version of Sprockets is compatible with ImpressCMS V2.0.x.",
 
 /** Contributors */
   'developer_website_url' => "https://github.com/fiammybe/sprockets/",
   'developer_website_name' => "Github",
   'developer_email' => "david.j@impresscms.org");
 
-$modversion['people']['developers'][] = "fiammybe (David Janssens)";
 $modversion['people']['developers'][] = "Madfish (Simon Wilkinson)";
+$modversion['people']['developers'][] = "fiammybe (David Janssens)";
 
 /** Manual */
-$modversion['manual']['wiki'][] = "<a href='https://github.com/fiammybe/sprockets/wiki' target='_blank'>English</a>";
+$modversion['manual']['wiki'][] = "<a href='https://www.impresscms.org/modules/simplywiki/index.php?page=Sprockets'>Sprockets Manual</a>";
 
-$modversion['warning'] = _CO_ICMS_WARNING_RC;
+$modversion['warning'] = _CO_ICMS_WARNING_FINAL;
 
 /** Administrative information */
 $modversion['hasAdmin'] = 1;
@@ -71,17 +71,17 @@ $modversion['onUpdate'] = "include/onupdate.inc.php";
 $modversion['hasSearch'] = 0;
 
 /** Menu information */
-$modversion['hasMain'] = 1;
+$modversion['hasMain'] = 0;
 
 $modversion['blocks'][1] = array(
-  'file' => 'sprockets_content_teasers.php',
-  'name' => _MI_SPROCKETS_CONTENT_TEASERS,
-  'description' => _MI_SPROCKETS_CONTENT_TEASERSDSC,
-  'show_func' => 'sprockets_content_teasers_show',
-  'edit_func' => 'sprockets_content_teasers_edit',
-	// 0 items to show | 1 tags | 2 objects | 3 image position | 4 image size | 5 display mode | 6 dynamic tagging
-  'options' => '5|All|All|1|150|1|0',
-  'template' => 'sprockets_content_teasers.html');
+  'file' => 'sprockets_content_recent.php',
+  'name' => _MI_SPROCKETS_CONTENT_RECENT,
+  'description' => _MI_SPROCKETS_CONTENT_RECENTDSC,
+  'show_func' => 'sprockets_content_recent_show',
+  'edit_func' => 'sprockets_content_recent_edit',
+// number of items|tag id|date format|max title length|spotlight|spotlight id|spotlight module name|spotlight type
+  'options' => '5|All|j/n/Y|90', //|0|0'0|0', disabled spotlight function for now
+  'template' => 'sprockets_content_recent.html');
 
 /** Templates information */
 $modversion['templates'][1] = array(
@@ -102,39 +102,27 @@ $modversion['templates'][] = array(
 
 $modversion['templates'][]= array(
   'file' => 'sprockets_admin_tag.html',
-  'description' => 'Tag admin index');
-
-$modversion['templates'][]= array(
-  'file' => 'sprockets_text.html',
-  'description' => 'Subtemplate for text resources');
-
-$modversion['templates'][]= array(
-  'file' => 'sprockets_sound.html',
-  'description' => 'Subtemplate for sound resources');
-
-$modversion['templates'][]= array(
-  'file' => 'sprockets_image.html',
-  'description' => 'Subtemplate for image and video resources');
+  'description' => 'Tag Admin Index');
 
 $modversion['templates'][]= array(
   'file' => 'sprockets_tag.html',
-  'description' => 'Tag index');
+  'description' => 'Tag Index');
 
 $modversion['templates'][]= array(
   'file' => 'sprockets_admin_taglink.html',
-  'description' => 'Taglink admin index');
+  'description' => 'Taglink Admin Index');
 
 $modversion['templates'][]= array(
   'file' => 'sprockets_admin_rights.html',
-  'description' => 'Rights admin index');
+  'description' => 'Rights Admin Index');
 
 $modversion['templates'][]= array(
   'file' => 'sprockets_rights.html',
-  'description' => 'Rights index');
+  'description' => 'Rights Index');
 
 $modversion['templates'][]= array(
   'file' => 'sprockets_admin_archive.html',
-  'description' => 'Archive admin index');
+  'description' => 'Archive Admin Index');
 
 /** Preferences information */
 
@@ -146,7 +134,6 @@ $modversion['config'][1] = array(
   'valuetype' => 'int',
   'default' =>  '1');
 
-// Number of items to include in RSS feed
 $modversion['config'][] = array(
   'name' => 'number_rss_items',
   'title' => '_MI_SPROCKETS_NUMBER_RSS_ITEMS',
@@ -154,98 +141,6 @@ $modversion['config'][] = array(
   'formtype' => 'text',
   'valuetype' => 'int',
   'default' =>  '10');
-
-// Thumbnail size for teaser images in the cross-module content on tag.php
-$modversion['config'][] = array(
-	'name' => 'thumbnail_width',
-	'title' => '_MI_SPROCKETS_THUMBNAIL_WIDTH',
-	'description' => '_MI_SPROCKETS_THUMBNAIL_WIDTHDSC',
-	'formtype' => 'textbox',
-	'valuetype' => 'int',
-	'default' =>  '150');
-
-$modversion['config'][] = array(
-	'name' => 'thumbnail_height',
-	'title' => '_MI_SPROCKETS_THUMBNAIL_HEIGHT',
-	'description' => '_MI_SPROCKETS_THUMBNAIL_HEIGHTDSC',
-	'formtype' => 'textbox',
-	'valuetype' => 'int',
-	'default' =>  '150');
-
-// Size for image resources in the cross-module content content on tag.php
-$modversion['config'][] = array(
-	'name' => 'image_width',
-	'title' => '_MI_SPROCKETS_IMAGE_WIDTH',
-	'description' => '_MI_SPROCKETS_IMAGE_WIDTHDSC',
-	'formtype' => 'textbox',
-	'valuetype' => 'int',
-	'default' =>  '400');
-
-$modversion['config'][] = array(
-	'name' => 'image_height',
-	'title' => '_MI_SPROCKETS_IMAGE_HEIGHT',
-	'description' => '_MI_SPROCKETS_IMAGE_HEIGHTDSC',
-	'formtype' => 'textbox',
-	'valuetype' => 'int',
-	'default' =>  '400');
-
-// Enable or disable cross-module content page
-$modversion['config'][] = array(
-	'name' => 'enable_user_side_pages',
-	'title' => '_MI_SPROCKETS_ENABLE_USER_SIDE',
-	'description' => '_MI_SPROCKETS_ENABLE_USER_SIDE_DSC',
-	'formtype' => 'yesno',
-	'valuetype' => 'int',
-	'default' => '0');
-
-$modversion['config'][] = array(
-	'name' => 'sprockets_tag_select_box',
-	'title' => '_MI_SPROCKETS_ENABLE_TAG_SELECT_BOX',
-	'description' => '_MI_SPROCKETS_ENABLE_TAG_SELECT_BOX_DSC',
-	'formtype' => 'yesno',
-	'valuetype' => 'int',
-	'default' => '1');
-
-// Display tag select box on cross-module content page
-
-// Client OBJECTS to include in the cross-module content on tag.php or in the cross-content block.
-// Need one entry for every object type.
-$client_objects = array(
-	'_MI_SPROCKETS_CMS_PAGES' => 'start',
-	'_MI_SPROCKETS_CATALOGUE_ITEMS' => 'item',
-	'_MI_SPROCKETS_EVENTS' => 'event',
-	'_MI_SPROCKETS_LIBRARY_PUBLICATIONS' => 'publication',
-	'_MI_SPROCKETS_NEWS_ARTICLES' => 'article',
-	'_MI_SPROCKETS_PARTNERS' => 'partner',
-	'_MI_SPROCKETS_PODCAST_PROGRAMMES' => 'programme',
-	'_MI_SPROCKETS_PODCAST_SOUNDTRACKS' => 'soundtrack',
-	'_MI_SPROCKETS_PROJECTS' => 'project'
-);
-
-// Objects to include in the cross-module content pages
-$modversion['config'][] = array(
-	'name' => 'client_objects',
-	'title' => '_MI_SPROCKETS_ALLOWED_CLIENT_OBJECTS',
-	'description' => '_MI_SPROCKETS_ALLOWED_CLIENT_OBJECTS_DSC',
-	'formtype' => 'select_multi',
-	'valuetype' => 'array',
-	'options' => $client_objects);
-
-$modversion['config'][] = array(
-	'name' => 'date_format',
-	'title' => '_MI_SPROCKETS_DATE_FORMAT',
-	'description' => '_MI_SPROCKETS_DATE_FORMAT_DSC',
-	'formtype' => 'textbox',
-	'valuetype' => 'text',
-	'default' =>  'j/n/Y');
-
-$modversion['config'][] = array(
-	'name' => 'pagination_limit',
-	'title' => '_MI_SPROCKETS_PAGINATION',
-	'description' => '_MI_SPROCKETS_PAGINATION_DSC',
-	'formtype' => 'textbox',
-	'valuetype' => 'int',
-	'default' =>  '10');
 
 $modversion['config'][] = array(
   'name' => 'resumption_token_cursor_offset',

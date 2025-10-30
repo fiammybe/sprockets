@@ -63,7 +63,7 @@ if (in_array($clean_op, $valid_op, TRUE))
 			if ($clean_css && $valid_stylesheet)
 			{
 				$result = file_put_contents($theme_path . $valid_stylesheet, $clean_css);
-				$ret = '/modules/' . basename(dirname(__DIR__))
+				$ret = '/modules/' . basename(dirname(dirname(__FILE__))) 
 							. '/admin/css_editor.php?stylesheet=' . $valid_stylesheet;
 				if ($result)
 				{
