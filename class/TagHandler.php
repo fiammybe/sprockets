@@ -122,7 +122,7 @@ class SprocketsTagHandler extends icms_ipf_Handler {
 		// Sanitise parameters used to build query in case a client module passes in bad data
 		$clean_module_id = isset($module_id) ? (int)$module_id : 0 ;
 		// todo ugly hack, but don't use mysql specific stuff!!
-        $clean_item = $item; //mysqli_real_escape_string( $item,);
+        $clean_item = $item;
 
 		if ($navigation_elements_only) {
 			$criteria = icms_buildCriteria(array('label_type' => '0', 'navigation_element' => '1'));
@@ -201,7 +201,7 @@ class SprocketsTagHandler extends icms_ipf_Handler {
 			$module_id = null, $item = null)
 	{
 		$clean_module_id = isset($module_id) ? intval($module_id): null ;
-		$clean_item = mysqli_real_escape_string($item);
+		$clean_item = $item;
 
 		$categoryList = $this->getCategoryOptions();
 		if (!empty($categoryList)) {
