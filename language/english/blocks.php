@@ -23,27 +23,3 @@ define("_MB_SPROCKETS_CONTENT_NO", "No");
 define("_MB_SPROCKETS_CONTENT_SPOTLIGHTED_ARTICLE", "Spotlighted article:");
 define("_MB_SPROCKETS_CONTENT_SPOTLIGHT_RECENT_ARTICLES", "Headlines");
 define("_MB_SPROCKETS_RECENT_CONTENT_TITLE", "Recent content");
-
-// Updated in V2.01
-define("_MB_SPROCKETS_CONTENT_TEASERS_ALL", "--- All ---");
-define("_MB_SPROCKETS_CONTENT_TEASERS_ITEM", "Catalogue (items)");
-define("_MB_SPROCKETS_CONTENT_TEASERS_START", "CMS pages");
-define("_MB_SPROCKETS_CONTENT_TEASERS_EVENT", "Events");
-define("_MB_SPROCKETS_CONTENT_TEASERS_PUBLICATION", "Library (publications)");
-define("_MB_SPROCKETS_CONTENT_TEASERS_ARTICLE", "News articles");
-define("_MB_SPROCKETS_CONTENT_TEASERS_PARTNER", "Partners");
-define("_MB_SPROCKETS_CONTENT_TEASERS_PROGRAMME", "Podcasts (programmes)");
-define("_MB_SPROCKETS_CONTENT_TEASERS_SOUNDTRACK", "Podcasts (soundtracks)");
-define("_MB_SPROCKETS_CONTENT_TEASERS_PROJECT", "Projects");
-define("_MB_SPROCKETS_CONTENT_TEASERS_PUBLISHED", "Published");
-define("_MB_SPROCKETS_CONTENT_TEASERS_VIEWS", "Views");
-define("_MB_SPROCKETS_CONTENT_RECENT_LEFT", "Left");
-define("_MB_SPROCKETS_CONTENT_RECENT_RIGHT", "Right");
-define("_MB_SPROCKETS_CONTENT_RECENT_NONE", "None");
-define("_MB_SPROCKETS_CONTENT_RECENT_TEASERS", "Teasers");
-define("_MB_SPROCKETS_CONTENT_RECENT_LIST", "List");
-define("_MB_SPROCKETS_CONTENT_OBJECTS_TO_INCLUDE", "Objects to include");
-define("_MB_SPROCKETS_CONTENT_POSITION_TEASER_IMAGES", "Position of teaser images");
-define("_MB_SPROCKETS_CONTENT_WIDTH_TEASERS_PIXELS", "Width of teaser image (pixels)");
-define("_MB_SPROCKETS_CONTENT_DISPLAY_MODE", "Display mode");
-define("_MB_SPROCKETS_CONTENT_DYNAMIC_FILTER_OVERRIDE", "Dynamic tag filter override");
